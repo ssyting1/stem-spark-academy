@@ -1737,12 +1737,18 @@ function App(){
   // Sync voice gender to window global so speak() can access it without React state
   React.useEffect(()=>{window._ssaVoiceGender=voiceGender;},[voiceGender]);
   const goPhase=(p)=>{stopSpeech();sounds.phase();setPhase(p);setSlideIdx(0);setQuizIdx(0);setQuizAns([]);setQuizPicked(null);};
+  // Stop speech whenever user leaves the lesson or bonuslesson screen
   useEffect(()=>{
+    if(screen!=='lesson'&&screen!=='bonuslesson')stopSpeech();
+  },[screen]);
+  useEffect(()=>{
+    // Only speak when the user is INSIDE an individual lesson screen
+    if(screen!=='lesson')return;
     if(phase==='intro'&&lesson)setTimeout(()=>speak(lesson.intro.replace(/Sparky/g,sparkyName)),500);
     if(phase==='learn'&&lesson){const sl=lesson.slides[slideIdx];setTimeout(()=>speak(`${sl.title}. ${sl.text}`),300);}
     if(phase==='chat'&&lesson)setTimeout(()=>speak(`Now chat with me ${sparkyName}! Ask me anything about ${lesson.title}!`),400);
     if(phase==='celebrate')setTimeout(()=>speak(`Incredible! You finished the lesson! You are an amazing Junior AI Scientist!`),400);
-  },[phase,slideIdx,lesson?.id]);
+  },[phase,slideIdx,lesson?.id,screen]);
 
   // ── AUTH HANDLERS ──
   const doLogin=()=>{
@@ -1778,7 +1784,7 @@ function App(){
       else{
         const total=newAns.filter(Boolean).length;const finalStars=total>=3?3:total>=2?2:1;
         const nc=new Set([...completed,lesson.id]);setStars(s=>({...s,[lesson.id]:finalStars}));setCompleted(nc);
-        const allInMod=MODULES[mod-1].lessons.every(l=>nc.has(l.id));
+        const mForBadge=getModData(mod);const allInMod=mForBadge&&mForBadge.lessons.every(l=>nc.has(l.id));
         if(allInMod)setBadges(b=>new Set([...b,mod]));
         setTimeout(()=>{sounds.badge();setShowConf(true);goPhase('celebrate');},500);
       }
@@ -2769,7 +2775,7 @@ function App(){
           h('div',{style:{fontSize:'2rem',marginBottom:6}},Array(stars[lesson.id]||3).fill('⭐').join('')),
           h('div',{style:{fontWeight:900,fontSize:'1.1rem',color:modData.color,marginBottom:4}},`${lesson.title} — Complete!`),
           h('div',{style:{fontSize:'.83rem',color:'rgba(255,255,255,.55)',fontWeight:800,marginBottom:12}},`You are a genuine Junior AI Scientist! 🎓 ${sparkyName} is proud of you!`),
-          badges.has(mod)&&MODULES[mod-1].lessons[MODULES[mod-1].lessons.length-1].id===lesson.id&&h('div',{style:{marginBottom:12,background:'rgba(255,230,0,.1)',border:'2px solid #FFE600',borderRadius:14,padding:'12px 16px'},className:'pop'},h('div',{style:{fontSize:'2.5rem'}},'🏅'),h('div',{style:{fontWeight:900,color:'#FFE600',fontSize:'1.05rem'}},`${modData.badgeName} Earned!`))
+          badges.has(mod)&&modData&&modData.lessons[modData.lessons.length-1].id===lesson.id&&h('div',{style:{marginBottom:12,background:'rgba(255,230,0,.1)',border:'2px solid #FFE600',borderRadius:14,padding:'12px 16px'},className:'pop'},h('div',{style:{fontSize:'2.5rem'}},'🏅'),h('div',{style:{fontWeight:900,color:'#FFE600',fontSize:'1.05rem'}},`${modData.badgeName} Earned!`))
         ),
         h('div',{style:{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}},
           lessonIdx<modData.lessons.length-1&&h('button',{className:'kb',style:{fontSize:'.93rem',padding:'12px 20px',background:modData.grad,color:'white'},onClick:()=>{sounds.click();setShowConf(false);startLesson(mod,lessonIdx+1);}},'Next Lesson →'),
