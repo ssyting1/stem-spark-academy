@@ -1726,7 +1726,9 @@ function App(){
   const [quizIdx,setQuizIdx]=useState(0);const [quizAns,setQuizAns]=useState([]);const [quizPicked,setQuizPicked]=useState(null);
   const [showConf,setShowConf]=useState(false);const [muted,setMutedState]=useState(false);
   const {sounds,speak,stopSpeech,setMute}=useAudio();
-  const getModData=(id)=>ALL_MODULES.find(m=>m.id===id)||MODULES.find(m=>m.id===id);
+  // Always search all tiers so an in-progress lesson never loses its data
+  const ALL_TIER_MODULES=[...MODULES,...TIER2_MODULES,...TIER3_MODULES,...TIER4_MODULES];
+  const getModData=(id)=>ALL_MODULES.find(m=>m.id===id)||ALL_TIER_MODULES.find(m=>m.id===id);
   const modData=mod?getModData(mod):null;
   const lesson=mod&&modData?modData.lessons[lessonIdx]:null;
   const phasePct=phase==='intro'?16:phase==='learn'?32:phase==='game'?50:phase==='chat'?68:phase==='quiz'?84:100;
@@ -2501,7 +2503,8 @@ function App(){
   );
 
 // ─── LESSON LIST ───
-  if(screen==='lessons'&&mod)return h('div',{style:{height:'100%',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}},
+  if(screen==='lessons'&&mod&&!modData){setScreen('modules');return null;}
+  if(screen==='lessons'&&mod&&modData)return h('div',{style:{height:'100%',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}},
     h(StarsBg),
     h('div',{style:{background:modData.grad,padding:'14px 16px 16px',zIndex:1}},
       h('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:10}},
@@ -2743,13 +2746,6 @@ function App(){
 
   // ─── LESSON PLAYER ───
   // If screen is lesson but data is gone (state transition), redirect immediately
-  if(screen==='lesson'&&!lesson){
-    setTimeout(()=>{setScreen(mod?'lessons':'modules');},50);
-    return h('div',{style:{height:'100%',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:16,color:'white'}},
-      h(Sparky,{mood:'thinking',size:80}),
-      h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.2rem',color:'#FFE600'}},'Loading...')
-    );
-  }
   if(screen==='lesson'&&lesson&&modData)return h('div',{style:{height:'100%',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}},
     h(StarsBg),
     showConf&&phase==='celebrate'&&h(Confetti),
