@@ -1382,11 +1382,27 @@ function SparkyChatWidget({sounds,lesson,sparkyName='Sparky'}){
     const text=input.trim();if(!text||loading)return;sounds.click();setInput('');
     const newMsgs=[...msgs,{role:'user',content:text}];setMsgs(newMsgs);setLoading(true);
     try{
-      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,system:getSparkySystem(sparkyName),messages:newMsgs.slice(-8).map(m=>({role:m.role,content:m.content}))})});
+      const storedKey=localStorage.getItem('ssa_api_key')||'';
+      if(!storedKey){
+        setMsgs(m=>[...m,{role:'assistant',content:'🔑 No API key set yet! Go to Customize → AI Setup to enter your Anthropic API key. Get one free at console.anthropic.com'}]);
+        setLoading(false);return;
+      }
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{
+        'Content-Type':'application/json',
+        'x-api-key':storedKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,system:getSparkySystem(sparkyName),messages:newMsgs.slice(-8).map(m=>({role:m.role,content:m.content}))})});
       const data=await res.json();
+      if(data.error){
+        const errMsg=data.error.type==='authentication_error'?'🔑 API key is invalid. Go to Customize → AI Setup to fix it.':
+          data.error.type==='rate_limit_error'?'⏳ Too many requests! Wait a moment and try again.':
+          `❌ Error: ${data.error.message||'Unknown error'}`;
+        setMsgs(m=>[...m,{role:'assistant',content:errMsg}]);setLoading(false);return;
+      }
       const reply=data.content?.[0]?.text||'Sparky says: Oops! My circuits got fizzy! 🔧 Try again!';
       setMsgs(m=>[...m,{role:'assistant',content:reply}]);sounds.phase();
-    }catch(e){setMsgs(m=>[...m,{role:'assistant',content:'Sparky says: My Wi-Fi is being silly! 📡 Try asking again!'}]);}
+    }catch(e){setMsgs(m=>[...m,{role:'assistant',content:'🌐 Network error — check your internet connection and try again. Error: '+e.message}]);}
     setLoading(false);
   };
   return h('div',{style:{display:'flex',flexDirection:'column',gap:8}},
@@ -2638,6 +2654,34 @@ function App(){
             h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.3rem',color:'#FFE600'}},''+s.v),
             h('div',{style:{fontSize:'.7rem',fontWeight:800,color:'rgba(255,255,255,.45)',marginTop:2}},s.l)
           ))
+        )
+      ),
+
+      h('div',{style:{background:'rgba(255,255,255,.06)',borderRadius:16,padding:'14px',marginBottom:12}},
+        h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1rem',color:'#FFE600',marginBottom:6}},'🔑 AI Chat Setup'),
+        h('div',{style:{fontSize:'.78rem',fontWeight:800,color:'rgba(255,255,255,.5)',marginBottom:10,lineHeight:1.5}},
+          'Sparky needs an Anthropic API key to answer your questions. Get one FREE at ',
+          h('span',{style:{color:'#00D4FF'}},'console.anthropic.com'),
+          ' — free tier gives you plenty of messages!'
+        ),
+        h('div',{style:{display:'flex',gap:8,marginBottom:6}},
+          h('input',{id:'api-key-input',type:'password',className:'auth-input',style:{flex:1,padding:'10px 14px',fontSize:'.88rem'},
+            placeholder:'Paste your API key here (sk-ant-...)',
+            defaultValue:localStorage.getItem('ssa_api_key')||''}),
+          h('button',{className:'kb',style:{padding:'10px 14px',background:'linear-gradient(135deg,#FFE600,#FF8C00)',color:'#070118',fontSize:'.88rem',flexShrink:0},
+            onClick:()=>{
+              const k=document.getElementById('api-key-input').value.trim();
+              if(!k){alert('Please paste your API key first!');return;}
+              if(!k.startsWith('sk-ant-')){alert('That does not look like an Anthropic API key. It should start with sk-ant-');return;}
+              localStorage.setItem('ssa_api_key',k);
+              sounds.correct();
+              alert('✅ API key saved! Sparky is now connected to Claude AI. Try asking a question!');
+            }},'Save 🔑')
+        ),
+        localStorage.getItem('ssa_api_key')&&h('div',{style:{display:'flex',alignItems:'center',gap:6,fontSize:'.75rem',fontWeight:800,color:'#39FF14'}},
+          '✅ API key is saved — Sparky is connected!',
+          h('button',{style:{background:'none',border:'none',color:'rgba(255,0,110,.7)',cursor:'pointer',fontSize:'.75rem',fontWeight:800,marginLeft:'auto'},
+            onClick:()=>{if(window.confirm('Remove API key?')){localStorage.removeItem('ssa_api_key');sounds.wrong();alert('API key removed.');}}},'Remove')
         )
       ),
 
