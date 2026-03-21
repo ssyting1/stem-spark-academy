@@ -1382,22 +1382,14 @@ function SparkyChatWidget({sounds,lesson,sparkyName='Sparky'}){
     const text=input.trim();if(!text||loading)return;sounds.click();setInput('');
     const newMsgs=[...msgs,{role:'user',content:text}];setMsgs(newMsgs);setLoading(true);
     try{
-      const storedKey=localStorage.getItem('ssa_api_key')||'';
-      if(!storedKey){
-        setMsgs(m=>[...m,{role:'assistant',content:'🔑 No API key set yet! Go to Customize → AI Setup to enter your Anthropic API key. Get one free at console.anthropic.com'}]);
-        setLoading(false);return;
-      }
-      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{
-        'Content-Type':'application/json',
-        'x-api-key':storedKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,system:getSparkySystem(sparkyName),messages:newMsgs.slice(-8).map(m=>({role:m.role,content:m.content}))})});
+      // Call our Netlify Function proxy (key lives server-side in env vars)
+      const res=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({system:getSparkySystem(sparkyName),messages:newMsgs.slice(-8).map(m=>({role:m.role,content:m.content}))})});
       const data=await res.json();
-      if(data.error){
-        const errMsg=data.error.type==='authentication_error'?'🔑 API key is invalid. Go to Customize → AI Setup to fix it.':
-          data.error.type==='rate_limit_error'?'⏳ Too many requests! Wait a moment and try again.':
-          `❌ Error: ${data.error.message||'Unknown error'}`;
+      if(!res.ok){
+        const errMsg=res.status===401?'🔑 API key issue — check Netlify environment variables.':
+          res.status===429?'⏳ Too many requests! Wait a moment and try again.':
+          `❌ Error ${res.status}: ${data.error||'Unknown error'}`;
         setMsgs(m=>[...m,{role:'assistant',content:errMsg}]);setLoading(false);return;
       }
       const reply=data.content?.[0]?.text||'Sparky says: Oops! My circuits got fizzy! 🔧 Try again!';
