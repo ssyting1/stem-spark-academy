@@ -2742,7 +2742,15 @@ function App(){
   );
 
   // ─── LESSON PLAYER ───
-  if(screen==='lesson'&&lesson)return h('div',{style:{height:'100%',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}},
+  // If screen is lesson but data is gone (state transition), redirect immediately
+  if(screen==='lesson'&&!lesson){
+    setTimeout(()=>{setScreen(mod?'lessons':'modules');},50);
+    return h('div',{style:{height:'100%',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:16,color:'white'}},
+      h(Sparky,{mood:'thinking',size:80}),
+      h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.2rem',color:'#FFE600'}},'Loading...')
+    );
+  }
+  if(screen==='lesson'&&lesson&&modData)return h('div',{style:{height:'100%',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}},
     h(StarsBg),
     showConf&&phase==='celebrate'&&h(Confetti),
     h('div',{style:{padding:'10px 14px',display:'flex',alignItems:'center',gap:10,zIndex:1,background:'rgba(0,0,0,.45)',borderBottom:'1px solid rgba(255,255,255,.07)'}},
