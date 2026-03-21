@@ -1384,12 +1384,15 @@ function SparkyChatWidget({sounds,lesson,sparkyName='Sparky'}){
     try{
       // Call our Netlify Function proxy (key lives server-side in env vars)
       const res=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({system:getSparkySystem(sparkyName),messages:newMsgs.slice(-8).map(m=>({role:m.role,content:m.content}))})});
+        body:JSON.stringify({system:getSparkySystem(sparkyName),
+          // Filter out the initial greeting (assistant), ensure starts with user role
+          messages:newMsgs.slice(-8).filter(m=>!m.content.includes('Hi there, superstar')).map(m=>({role:m.role,content:m.content}))
+        })});
       const data=await res.json();
       if(!res.ok){
         const errMsg=res.status===401?'🔑 API key issue — check Netlify environment variables.':
           res.status===429?'⏳ Too many requests! Wait a moment and try again.':
-          `❌ Error ${res.status}: ${data.error||'Unknown error'}`;
+          `❌ Error ${res.status}: ${typeof data.error==='object'?JSON.stringify(data.error):data.error||'Unknown error'}` ;
         setMsgs(m=>[...m,{role:'assistant',content:errMsg}]);setLoading(false);return;
       }
       const reply=data.content?.[0]?.text||'Sparky says: Oops! My circuits got fizzy! 🔧 Try again!';

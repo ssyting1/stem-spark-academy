@@ -12,7 +12,23 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { system, messages } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const { system } = body;
+    let { messages } = body;
+
+    // Anthropic requires messages to alternate user/assistant and start with user
+    // Remove any leading assistant messages (e.g. the initial greeting)
+    messages = messages.filter(m => m.role === 'user' || m.role === 'assistant');
+    while (messages.length > 0 && messages[0].role !== 'user') {
+      messages.shift();
+    }
+
+    if (!messages || messages.length === 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'No user messages to send' })
+      };
+    }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -31,8 +47,18 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      // Return the full Anthropic error as a string for easy display
+      const errMsg = data.error ? `${data.error.type}: ${data.error.message}` : JSON.stringify(data);
+      return {
+        statusCode: response.status,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: errMsg })
+      };
+    }
+
     return {
-      statusCode: response.status,
+      statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     };
