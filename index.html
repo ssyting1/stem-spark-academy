@@ -263,8 +263,8 @@ const SPARKY_BOTS=[
 // ║  2. SQL Editor → run supabase_setup.sql                  ║
 // ║  3. Settings → API → copy URL and anon key here          ║
 // ╚══════════════════════════════════════════════════════════╝
-const SUPABASE_URL  = 'https://nrjqynvdhwflntrdxlbn.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_A6YI2PY0T9f6XfF6PWIvzg_TFfMrQ4W';
+const SUPABASE_URL  = 'https://YOUR_PROJECT_ID.supabase.co';
+const SUPABASE_ANON = 'YOUR_ANON_PUBLIC_KEY';
 const _db = (typeof supabase !== 'undefined' && SUPABASE_URL.indexOf('YOUR_PROJECT') === -1)
   ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
   : null;
@@ -3237,9 +3237,9 @@ if(screen==='parent'){
     h(StarsBg),
     h(TopBar,{title:'🏆 Leaderboard',back:'welcome',backLabel:'← Home',showIcons:false}),
     h('div',{style:{flex:1,overflowY:'auto',padding:'12px 14px 24px',zIndex:1}},
-      h('div',{style:{textAlign:'center',padding:'8px 0 16px'}},
+      h('div',{style:{textAlign:'center',padding:'8px 0 14px'}},
         h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1rem',color:'rgba(255,255,255,.5)',marginBottom:4}},'Top Junior AI Scientists! 🎓'),
-        h('div',{style:{fontSize:'.78rem',fontWeight:800,color:'rgba(255,255,255,.35)'}},'Score = Stars × 10 + Lessons × 5 + Badges × 50')
+        h('div',{style:{fontSize:'.75rem',fontWeight:800,color:'rgba(255,255,255,.3)'}},'Score = Stars×10 + Lessons×5 + Badges×50')
       ),
       (()=>{
         const lb=lbData;
@@ -3247,7 +3247,7 @@ if(screen==='parent'){
         const myRank=lb.findIndex(u=>u.email===myEmail);
         return h('div',null,
           lbLoading&&h('div',{style:{textAlign:'center',padding:30,color:'rgba(255,255,255,.5)'}},
-            h('div',{style:{fontSize:'2rem',animation:'spin 1s linear infinite'}},'⏳'),
+            h('div',{style:{fontSize:'2rem'}},'⏳'),
             h('p',{style:{marginTop:8,fontWeight:700}},'Loading leaderboard...')
           ),
           !lbLoading&&lb.length===0&&h('div',{style:{textAlign:'center',padding:30}},
@@ -3259,22 +3259,27 @@ if(screen==='parent'){
             const medals=['🥇','🥈','🥉'];
             const rankEmoji=i<3?medals[i]:`#${i+1}`;
             const userSparkyColor=SPARKY_COLORS.find(c=>c.id===(u.sparkyColorId||'blue'))||SPARKY_COLORS[0];
-            return h('div',{key:u.email,className:`lb-row${isMe?' me':''}`,style:{animation:`slideUp .3s ease-out ${i*.04}s both`}},
-              h('div',{className:'lb-rank',style:{color:i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'rgba(255,255,255,.5)'}},rankEmoji),
-              h('div',{style:{width:36,height:36,flexShrink:0}},h(Sparky,{size:36,anim:false,bodyColor:userSparkyColor.body,accentColor:userSparkyColor.accent})),
-              h('div',{style:{flex:1,minWidth:0}},
-                h('div',{style:{fontWeight:900,fontSize:'.92rem',color:isMe?'#FFE600':'white',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},
-                  (u.username||u.email.split('@')[0])+(isMe?' (you)':'')
-                ),
-                h('div',{style:{fontSize:'.72rem',fontWeight:800,color:'rgba(255,255,255,.45)',marginTop:1}},
-                  `${u.lessonsD} lessons • ${u.badgesD} badges • ${u.totalStars}⭐`
+            const displayName=u.name||u.username||(u.email?u.email.split('@')[0]:'Player');
+            return h('div',{key:u.email||i,className:`lb-row${isMe?' me':''}`,style:{animation:`slideUp .3s ease-out ${i*.04}s both`,display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:14,background:isMe?'rgba(255,230,0,.1)':'rgba(255,255,255,.06)',border:`1px solid ${isMe?'rgba(255,230,0,.3)':'rgba(255,255,255,.08)'}`,marginBottom:6}},
+              h('div',{style:{width:32,textAlign:'center',flexShrink:0,fontSize:i<3?'1.3rem':'.82rem',fontFamily:"'Fredoka One',cursive",fontWeight:900,color:i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'rgba(255,255,255,.45)'}},rankEmoji),
+              h('div',{style:{width:40,height:40,flexShrink:0,borderRadius:'50%',overflow:'hidden',background:'rgba(0,0,0,.35)',border:`2px solid ${isMe?'rgba(255,230,0,.4)':'rgba(255,255,255,.12)'}`,display:'flex',alignItems:'flex-end',justifyContent:'center',position:'relative'}},
+                h('div',{style:{position:'absolute',bottom:-3,left:'50%',transform:'translateX(-50%)'}},
+                  h(Sparky,{size:46,anim:false,bodyColor:userSparkyColor.body,accentColor:userSparkyColor.accent})
                 )
               ),
-              h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.1rem',color:isMe?'#FFE600':'rgba(255,255,255,.7)',flexShrink:0}},u.score)
+              h('div',{style:{flex:1,minWidth:0}},
+                h('div',{style:{fontWeight:900,fontSize:'.9rem',color:isMe?'#FFE600':'#fff',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',lineHeight:1.25}},
+                  displayName+(isMe?' (you)':'')
+                ),
+                h('div',{style:{fontSize:'.68rem',fontWeight:700,color:'rgba(255,255,255,.38)',marginTop:2,lineHeight:1}},
+                  `${u.lessonsD||0} lessons · ${u.badgesD||0} badges · ${u.totalStars||0}⭐`
+                )
+              ),
+              h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.25rem',fontWeight:900,color:isMe?'#FFE600':'rgba(255,255,255,.8)',flexShrink:0,minWidth:52,textAlign:'right'}},u.score||0)
             );
           }),
-          myRank>=20&&h('div',{style:{marginTop:8,padding:'8px 0',textAlign:'center',fontSize:'.82rem',fontWeight:800,color:'rgba(255,255,255,.4)'}},
-            `You are ranked #${myRank+1} — keep learning to climb!`
+          myRank>=20&&h('div',{style:{marginTop:8,padding:'8px 0',textAlign:'center',fontSize:'.8rem',fontWeight:800,color:'rgba(255,255,255,.35)'}},
+            `You are ranked #${myRank+1} — keep learning to climb! 🚀`
           )
         );
       })()
