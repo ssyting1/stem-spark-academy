@@ -1626,6 +1626,41 @@ function useAudio(){
   const ctx=React.useRef(null);
   const muteRef=React.useRef(false);
   const voiceRef=React.useRef(null);
+  const unlockedRef=React.useRef(false);
+
+  // Mobile browsers block AudioContext until a user gesture.
+  // We hook every touch/click/keydown on the document to unlock audio
+  // the very first time the user interacts — before they tap any button.
+  React.useEffect(()=>{
+    const unlock=()=>{
+      if(unlockedRef.current)return;
+      unlockedRef.current=true;
+      // Create/resume AudioContext on first gesture
+      if(!ctx.current){
+        try{ctx.current=new(window.AudioContext||window.webkitAudioContext)();}
+        catch(e){return;}
+      }
+      if(ctx.current.state==='suspended')ctx.current.resume().catch(()=>{});
+      // Prime speech synthesis — mobile requires a silent utterance on gesture
+      if(window.speechSynthesis){
+        const u=new SpeechSynthesisUtterance('');
+        u.volume=0;
+        window.speechSynthesis.speak(u);
+      }
+      // Clean up listeners once unlocked
+      ['touchstart','touchend','click','keydown'].forEach(e=>{
+        document.removeEventListener(e,unlock,true);
+      });
+    };
+    ['touchstart','touchend','click','keydown'].forEach(e=>{
+      document.addEventListener(e,unlock,{passive:true,capture:true});
+    });
+    return ()=>{
+      ['touchstart','touchend','click','keydown'].forEach(e=>{
+        document.removeEventListener(e,unlock,true);
+      });
+    };
+  },[]);
 
   const getCtx=()=>{
     if(!ctx.current){
@@ -1665,24 +1700,52 @@ function useAudio(){
     if(muteRef.current||!window.speechSynthesis)return;
     try{
       window.speechSynthesis.cancel();
-      const u=new SpeechSynthesisUtterance(text.replace(/[*_#`]/g,'').slice(0,320));
+      // Preprocess text: add rhythm breaks to reduce robotic monotone
+      // Commas and dashes create natural cyborg-style speech cadence
+      const cleanText=text
+        .replace(/[*_#`]/g,'')
+        .replace(/([!?])\s+/g,'$1... ')       // pause after excitement
+        .replace(/(AI|STEM|CODE|HTML|CSS|JS)/g,match=>match.split('').join(' '))  // spell out acronyms
+        .slice(0,320);
+      const u=new SpeechSynthesisUtterance(cleanText);
       const gender=window._ssaVoiceGender||'female';
-      // Dramatically different pitch + rate so even same voice sounds different
+      // Cyborg voices — same speed, different pitch, less monotone via text processing
       if(gender==='female'){
-        u.pitch=1.6;   // noticeably high
-        u.rate=1.05;
+        u.pitch=1.35;  // bright cyborg — cheerful and electronic
+        u.rate=1.08;   // same speed as boy
+        u.volume=1.0;
       } else {
-        u.pitch=0.6;   // noticeably low
-        u.rate=0.88;
+        u.pitch=1.1;   // cool cyborg — warm, not deep, same speed as girl
+        u.rate=1.08;   // same speed as girl
+        u.volume=1.0;
       }
-      u.volume=0.92;
       // Wait for voices to load (needed on some browsers)
       const trySpeak=()=>{
-        const voices=window.speechSynthesis.getVoices();
+        let voices=window.speechSynthesis.getVoices();
+        // iOS Safari: voices load synchronously after first call
+        // Add a short retry loop for browsers that load voices async
         if(!voices.length){
-          window.speechSynthesis.onvoiceschanged=()=>{trySpeak();};
+          let attempts=0;
+          const retry=setInterval(()=>{
+            voices=window.speechSynthesis.getVoices();
+            attempts++;
+            if(voices.length||attempts>10){
+              clearInterval(retry);
+              if(voices.length)doSpeak(voices);
+            }
+          },100);
+          // Also listen for voiceschanged event
+          const onChange=()=>{
+            clearInterval(retry);
+            window.speechSynthesis.removeEventListener('voiceschanged',onChange);
+            doSpeak(window.speechSynthesis.getVoices());
+          };
+          window.speechSynthesis.addEventListener('voiceschanged',onChange);
           return;
         }
+        doSpeak(voices);
+      };
+      const doSpeak=(voices)=>{
         const englishVoices=voices.filter(v=>v.lang.startsWith('en'));
         const isFemale=v=>{
           const n=v.name.toLowerCase();
@@ -1704,8 +1767,12 @@ function useAudio(){
           match=englishVoices.find(isMale)||englishVoices.find(v=>!isFemale(v))||englishVoices[0];
         }
         if(match)u.voice=match;
-        window.speechSynthesis.speak(u);
-        voiceRef.current=u;
+        // Cancel any active speech, then speak immediately
+        window.speechSynthesis.cancel();
+        setTimeout(()=>{
+          window.speechSynthesis.speak(u);
+          voiceRef.current=u;
+        },10);
       };
       trySpeak();
     }catch(e){}
@@ -2596,7 +2663,7 @@ function App(){
       h('div',{style:{background:'rgba(255,255,255,.06)',borderRadius:16,padding:'14px',marginBottom:12}},
         h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1rem',color:'#00D4FF',marginBottom:10}},'🔊 Sparky Voice'),
         h('div',{style:{display:'flex',gap:8,marginBottom:4}},
-          [{id:'female',label:'♀️ Girl Voice',desc:'Higher, friendly'},{id:'male',label:'♂️ Boy Voice',desc:'Lower, calm'}].map(v=>
+          [{id:'female',label:'♀️ Girl',desc:'Bright & energetic ⚡'},{id:'male',label:'♂️ Boy',desc:'Cool & warm 🤖'}].map(v=>
             h('div',{key:v.id,style:{flex:1,padding:'10px 8px',borderRadius:14,border:`2px solid ${voiceGender===v.id?'#00D4FF':'rgba(255,255,255,.12)'}`,background:voiceGender===v.id?'rgba(0,212,255,.15)':'rgba(255,255,255,.04)',cursor:'pointer',textAlign:'center',transition:'all .15s'},
               onClick:()=>{
                 sounds.click();
@@ -2609,9 +2676,9 @@ function App(){
                   window.speechSynthesis.cancel();
                   setTimeout(()=>{
                     const pv=new SpeechSynthesisUtterance('Hi! I am '+sparkyName+'! This is my '+(v.id==='female'?'girl':'boy')+' voice!');
-                    pv.pitch=v.id==='female'?1.6:0.6;
-                    pv.rate=v.id==='female'?1.05:0.88;
-                    pv.volume=0.92;
+                    pv.pitch=v.id==='female'?1.35:1.1;
+                    pv.rate=1.08;  // same speed for both
+                    pv.volume=1.0;
                     const vs=window.speechSynthesis.getVoices();
                     const enVs=vs.filter(x=>x.lang.startsWith('en'));
                     const isFem=x=>{const n=x.name.toLowerCase();return n.includes('female')||n.includes('samantha')||n.includes('karen')||n.includes('victoria')||n.includes('zira')||n.includes('ava');};
