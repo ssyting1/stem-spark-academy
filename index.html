@@ -759,9 +759,15 @@ const MODULES=[
 lessons:[
  {id:1,title:'Meet Sparky!',intro:'Hi! I am Sparky and I am an AI — Artificial Intelligence! I am a computer program that can LEARN new things, just like you learn new things at school! AI is not magic or scary. It is just a very clever computer program that humans built. Today we find out what makes AI so cool!',
   slides:[
-   {title:'What is AI?',text:'AI stands for Artificial Intelligence. Artificial means made by people. Intelligence means being able to learn and think. Put them together and AI is a computer program that people built to learn from examples and help solve problems! Like a very smart helper!',e:'🤖'},
-   {title:'AI is Everywhere!',text:'You probably use AI every single day without knowing it! When YouTube suggests a video you might like — that is AI! When your phone unlocks by recognizing your face — that is AI! When a game adjusts its difficulty for you — AI again! It is all around you!',e:'📱'},
-   {title:'People Teach AI!',text:'AI does not know anything when it first starts — just like a newborn baby! People teach it by showing it thousands and thousands of examples. Show an AI 10,000 pictures of cats and dogs and eventually it learns the difference. You are smarter already!',e:'👩‍💻'}
+   {title:'What is AI?',text:'AI stands for Artificial Intelligence. Artificial means made by people. Intelligence means being able to learn and think. Put them together and AI is a computer program that people built to learn from examples and help solve problems! Like a very smart helper!',e:'🤖',
+    scene:'One morning, Zara asked her phone: Hey Siri, will it rain today? And it answered! That tiny conversation used Artificial Intelligence!',
+    fact:'The term Artificial Intelligence was invented in 1956 — before your parents were even born!'},
+   {title:'AI is Everywhere!',text:'You probably use AI every single day without knowing it! When YouTube suggests a video you might like — that is AI! When your phone unlocks by recognizing your face — that is AI! When a game adjusts its difficulty for you — AI again! It is all around you!',e:'📱',
+    scene:'Alex played a video game that kept getting harder the better he got. The game was secretly watching, learning and adapting — just like a smart coach would!',
+    fact:'Netflix uses AI to pick shows for you. It has studied what over 200 million people watch to make better suggestions!'},
+   {title:'People Teach AI!',text:'AI does not know anything when it first starts — just like a newborn baby! People teach it by showing it thousands and thousands of examples. Show an AI 10,000 pictures of cats and dogs and eventually it learns the difference. You are smarter already!',e:'👩‍💻',
+    scene:'Imagine showing your little brother 1000 pictures of dogs until he could spot a dog anywhere. That is EXACTLY how scientists teach AI — with lots of examples!',
+    fact:'The AI that plays chess better than any human learned by playing against itself over 9 million games in just 4 hours!'}
   ],
   game:{type:'sort',title:'Is it AI or Not AI? 🤔',inst:'AI can LEARN and get smarter over time. Regular tech just follows simple rules without learning. Sort each item into the right bucket!',items:[{l:'Siri / Alexa',e:'🔊',ai:true},{l:'A Calculator',e:'🧮',ai:false},{l:'Netflix Picks',e:'🎬',ai:true},{l:'A Light Switch',e:'💡',ai:false},{l:'Self-Driving Car',e:'🚗',ai:true},{l:'A Regular Clock',e:'⏰',ai:false}]},
   quiz:[
@@ -771,11 +777,21 @@ lessons:[
   ]},
  {id:2,title:'AI Sees the World',intro:'How do I see the world? Through DATA! Data is just information — photos, words, sounds, and numbers. Think of data like food for my brain. The more good food I eat, the smarter I get! Today we explore how AI uses data to learn about our amazing world!',
   slides:[
-   {title:'What is Data?',text:'Data just means information! A photo of your dog is data. The words in your favourite book are data. Your name and age are data. AI uses HUGE amounts of data to learn — imagine reading every book in 1000 libraries! That is the kind of data AI works with!',e:'📊'},
-   {title:'Learning from Lots of Examples!',text:'Here is how AI learns: imagine showing someone 500 different dog photos. After seeing that many, they get REALLY good at spotting dogs! AI works the same way. Show it enough examples and it becomes brilliant at recognizing them in brand new photos it has never seen!',e:'🐱'},
-   {title:'More Practice Makes AI Smarter!',text:'Just like you get better at reading the more books you read, AI gets smarter with more data! A little bit of data makes a so-so AI. Lots of really good data makes an amazing AI. Practice and examples are everything — for you AND for AI!',e:'📈'}
+   {title:'What is Data?',text:'Data just means information! A photo of your dog is data. The words in your favourite book are data. Your name and age are data. AI uses HUGE amounts of data to learn — imagine reading every book in 1000 libraries! That is the kind of data AI works with!',e:'📊',
+    scene:'Jamie counted: one photo of a cat, two photos of dogs, three videos of birds. That is all DATA! And AI is absolutely hungry for it!',
+    fact:'Every single day, humans create 2.5 quintillion bytes of data. Written as a number that is 2,500,000,000,000,000,000 bytes — every single day!'},
+   {title:'Learning from Lots of Examples!',text:'Here is how AI learns: imagine showing someone 500 different dog photos. After seeing that many, they get REALLY good at spotting dogs! AI works the same way. Show it enough examples and it becomes brilliant at recognizing them in brand new photos it has never seen!',e:'🐱',
+    scene:'Zara challenged Sparky: Can you spot MY cat Whiskers? Sparky had studied 50,000 cat photos. Of course! said Sparky. I never forget a face!',
+    fact:'Google Photos AI has learned from over 1 billion images. That would take a human 30,000 years to look through!'},
+   {title:'More Practice Makes AI Smarter!',text:'Just like you get better at reading the more books you read, AI gets smarter with more data! A little bit of data makes a so-so AI. Lots of really good data makes an amazing AI. Practice and examples are everything — for you AND for AI!',e:'📈',
+    scene:'Why are you so smart, Sparky? asked Alex. Because I practised with millions of examples! said Sparky. Just like how you got good at riding your bike!',
+    fact:'The AI that writes stories learned by reading more books than any human could read in 100 lifetimes!'}
   ],
-  game:{type:'pick',title:'Spot the Pattern! 🔍',inst:'AI is great at finding patterns. Can YOU think like an AI and figure out what comes next in each pattern?',items:[{q:'🔴 🔵 🔴 🔵 ❓',o:['🔴','🟢','🟡'],a:0},{q:'⭐ ⭐ 🌙 ⭐ ⭐ ❓',o:['⭐','🌙','☀️'],a:1},{q:'🐱 🐶 🐱 🐶 ❓',o:['🐶','🐱','🐦'],a:1}]},
+  game:{type:'story',title:'Alex Trains an AI! 🌟',inst:'Help Alex make the right choices to train a brilliant AI! Your decisions earn XP!',steps:[
+    {scene:'Alex wants to teach an AI to recognise cats. She has photos on her computer. What should she do first?',emoji:'🐱',choices:[{text:'Show the AI 10,000 cat photos with labels saying CAT',correct:true},{text:'Tell the AI a bedtime story about a cat',correct:false},{text:'Buy the AI a real kitten to play with',correct:false}]},
+    {scene:'The AI keeps saying dogs are cats! It keeps making the same mistake. What should Alex do?',emoji:'🐕',choices:[{text:'Give up and throw the computer away',correct:false},{text:'Show it MORE examples of both dogs and cats with clear labels',correct:true},{text:'Just ask the AI nicely to try harder',correct:false}]},
+    {scene:'The AI is now 95% accurate at spotting cats. Alex wants to make it even better. What next?',emoji:'📊',choices:[{text:'Stop here — 95% is already amazing enough!',correct:false},{text:'Add even more diverse cat photos from different countries and lighting',correct:true},{text:'Switch to a completely different topic',correct:false}]}
+   ]},
   quiz:[
    {q:'What is data?',o:['A type of robot','Information that AI uses to learn (photos, words, numbers)','A video game console'],a:1},
    {q:'How does AI learn to recognize cats?',o:['By meowing at them','By seeing hundreds of cat photos over and over','By becoming best friends with cats'],a:1},
@@ -783,11 +799,17 @@ lessons:[
   ]},
  {id:3,title:'Teaching a Robot',intro:'Want to know a superpower YOU have? You can teach an AI! When people train an AI they show it examples and put a label on each one — like sticking name tags on everything so the AI knows what it is looking at. Today YOU get to be the AI teacher!',
   slides:[
-   {title:'Show It and Label It!',text:'Teaching AI is like making flash cards! You show the AI a photo and write a label that says what it is. Photo of a cat + label CAT. Photo of a dog + label DOG. After seeing thousands of labeled examples the AI learns the difference all by itself!',e:'🏷️'},
-   {title:'The Guessing Game!',text:'Here is how AI actually learns: it looks at a new photo and makes a GUESS. Was it right? Amazing, remember that! Was it wrong? Learn from the mistake and try again! This happens millions of times until the AI gets really really good!',e:'🔄'},
-   {title:'Real People Do This Job!',text:'At big tech companies, real people actually sit and label data all day as their job! They might label 1000 different photos in a single day. They are called Data Labelers and without them AI would never be able to learn anything at all!',e:'👩‍🏫'}
+   {title:'Show It and Label It!',text:'Teaching AI is like making flash cards! You show the AI a photo and write a label that says what it is. Photo of a cat + label CAT. Photo of a dog + label DOG. After seeing thousands of labeled examples the AI learns the difference all by itself!',e:'🏷️',
+    scene:'Alex made 100 flashcards: Cat... Dog... Cat... Fish... Each card taught Sparky something new. One more! said Sparky eagerly. I love learning!',
+    fact:'Apple, Google and Amazon pay thousands of people to label data every day. It is one of the most important — and most human — jobs in AI!'},
+   {title:'The Guessing Game!',text:'Here is how AI actually learns: it looks at a new photo and makes a GUESS. Was it right? Amazing, remember that! Was it wrong? Learn from the mistake and try again! This happens millions of times until the AI gets really really good!',e:'🔄',
+    scene:'Is that a cat? Sparky guessed. No! It is a dog! said Zara. Oops! said Sparky. I will remember that forever. And it did — every single time!',
+    fact:'An AI can make and learn from 1 million mistakes in the time it takes you to eat breakfast. Mistakes are literally its superpower!'},
+   {title:'Real People Do This Job!',text:'At big tech companies, real people actually sit and label data all day as their job! They might label 1000 different photos in a single day. They are called Data Labelers and without them AI would never be able to learn anything at all!',e:'👩‍🏫',
+    scene:'What is your job? Jamie asked the scientist. I label pictures all day! she smiled. Without my labels, AI would be completely lost in the world!',
+    fact:'Before ChatGPT could talk to anyone, hundreds of real people spent months having conversations with it and rating its answers to teach it how to respond!'}
   ],
-  game:{type:'label',title:'Be the AI Teacher! 🏫',inst:'Help teach Sparky what things are! Look at each picture and tap the correct label. You are the teacher now — Sparky is learning from YOU!',items:[{e:'🐱',o:['Cat','Dog','Bird'],a:0},{e:'🍎',o:['Banana','Apple','Orange'],a:1},{e:'🚗',o:['Truck','Bike','Car'],a:2},{e:'☀️',o:['Moon','Star','Sun'],a:2}]},
+  game:{type:'memory',title:'Match the Data Labels! 🧠',inst:'Flip the cards and match each picture with its label! This is how AI learns — by connecting images to their correct labels. Find all the pairs!',items:[{e:'🐱',label:'Cat'},{e:'🐶',label:'Dog'},{e:'🍎',label:'Apple'},{e:'☀️',label:'Sun'},{e:'🚀',label:'Rocket'},{e:'🌈',label:'Rainbow'}]},
   quiz:[
    {q:'How do you teach an AI to recognize something?',o:['Show it labeled examples over and over','Give it a really good textbook to read','Take it to school with you'],a:0},
    {q:'What is a label in AI training?',o:['A pretty sticker for decoration','A name tag that tells the AI what it is looking at','A type of paint colour'],a:1},
@@ -795,11 +817,23 @@ lessons:[
   ]},
  {id:4,title:'AI Makes Mistakes',intro:'Psst! Can I tell you a secret? Even I, Sparky, get things wrong sometimes! AI is not perfect — and knowing that is really important! Grownups who build AI work hard to fix mistakes and make AI fair for everyone. Today you learn why humans always need to check AI work!',
   slides:[
-   {title:'Why AI Gets Things Wrong!',text:'AI makes mistakes when it did not see enough good examples while learning. Imagine learning to spell from a book full of typos — you would learn wrong spellings! Same for AI. Bad examples or not enough examples lead to wrong answers. That is why the training data matters so much!',e:'❌'},
-   {title:'What is Unfair AI?',text:'Sometimes AI can accidentally be unfair! If an AI only sees photos of one type of person while learning, it might not work well for everyone else. Scientists call this BIAS. It is a big problem that researchers work really hard to fix so that AI treats everyone equally!',e:'⚖️'},
-   {title:'YOU are Always the Boss!',text:'Here is the most important thing to remember: AI is just a helper tool. YOU are always in charge! Always check what AI tells you. If something feels wrong, ask a trusted adult. Your own brain is more powerful than any computer ever made. AI helps — YOU decide!',e:'🤝'}
+   {title:'Why AI Gets Things Wrong!',text:'AI makes mistakes when it did not see enough good examples while learning. Imagine learning to spell from a book full of typos — you would learn wrong spellings! Same for AI. Bad examples or not enough examples lead to wrong answers. That is why the training data matters so much!',e:'❌',
+    scene:'Sparky looked at a photo of a wolf. A dog! said Sparky confidently. Hmm, said Jamie, close — but not quite! That is a wolf. Sparky gasped: I need more examples!',
+    fact:'In 2016 a famous AI chatbot learned from the internet and within 24 hours started saying terrible things. Microsoft had to shut it down — AI CAN go wrong!'},
+   {title:'What is Unfair AI?',text:'Sometimes AI can accidentally be unfair! If an AI only sees photos of one type of person while learning, it might not work well for everyone else. Scientists call this BIAS. It is a big problem that researchers work really hard to fix so that AI treats everyone equally!',e:'⚖️',
+    scene:'Zara tested the face recognition app. It recognised her dad instantly. But it struggled with her grandma. That does not seem fair! said Zara. And she was absolutely right.',
+    fact:'In 2018, Amazon had to scrap an AI hiring tool because it was unfairly marking down CVs from women. Even big companies make bias mistakes!'},
+   {title:'YOU are Always the Boss!',text:'Here is the most important thing to remember: AI is just a helper tool. YOU are always in charge! Always check what AI tells you. If something feels wrong, ask a trusted adult. Your own brain is more powerful than any computer ever made. AI helps — YOU decide!',e:'🤝',
+    scene:'Sparky said the capital of Australia is Sydney! Wait, said Alex, let me check that. It is actually Canberra! Even Sparky can be wrong — always double check!',
+    fact:'The capital of Australia really IS Canberra — not Sydney! This is one of the most common wrong facts AI gets confused about!'}
   ],
-  game:{type:'pick',title:'Catch Sparky\'s Mistake! 🕵️',inst:'Oops! Sparky got something wrong. Can you spot the mistake and pick the correct answer to fix it?',items:[{q:'Sparky says ALL birds can fly! What is wrong?',o:['Sparky is completely right!','Penguins and ostriches cannot fly!','Fish can actually fly too!'],a:1},{q:'Sparky says the sun goes around the Earth. What is wrong?',o:['Sparky is right about that!','The moon goes around the sun!','Actually Earth goes around the sun!'],a:2},{q:'Sparky says AI is ALWAYS 100% correct. What is wrong?',o:['Sparky is right, AI is perfect!','AI definitely makes mistakes sometimes!','AI is wrong about literally everything!'],a:1}]},
+  game:{type:'scramble',title:'Unscramble AI Words! 🔤',inst:'These important AI words got all jumbled up! Use the hints to figure out each word then type it in. Hit GO to check!',items:[
+    {word:'DATA',hint:'📊 Information that AI learns from'},
+    {word:'LABEL',hint:'🏷️ The name tag on a training example'},
+    {word:'ROBOT',hint:'🤖 A machine that can move and do tasks'},
+    {word:'LEARN',hint:'📚 What AI does from examples'},
+    {word:'SMART',hint:'🧠 What AI becomes with lots of practice'}
+   ]},
   quiz:[
    {q:'Why might an AI give a wrong answer?',o:['It is feeling lazy that day','It did not see enough good examples when learning','It secretly hates homework'],a:1},
    {q:'What is AI bias?',o:['When AI runs out of battery','When AI is unfair to some people because of bad training data','When AI talks too fast'],a:1},
@@ -1598,6 +1632,47 @@ function JSGame({game,onComplete,sounds}){
 
 
 
+
+// ── FUN VARIETY HELPERS ──
+const CORRECT_MSGS=[
+  '🔥 CORRECT! You are on fire!',
+  '⚡ ZAP! Right answer!',
+  '🌟 SUPERSTAR! That is it!',
+  '🎯 BULLSEYE! Perfect!',
+  '🚀 BLAST OFF! Amazing!',
+  '💎 GEM-LEVEL answer!',
+  '🏆 CHAMPION move!',
+  '✨ SPARKLING answer!',
+  '🎉 YES YES YES!',
+  '🤩 MIND = BLOWN! Correct!',
+];
+const WRONG_MSGS=[
+  '🤔 Oops! Give it another think!',
+  '💪 Not quite — you\'ve got this!',
+  '🔄 Almost! Every mistake is learning!',
+  '😅 Tricky one! The answer was below!',
+  '🌱 Keep growing — mistakes help you learn!',
+];
+const CELEBRATE_MSGS=[
+  ['🎉 INCREDIBLE! 🎉','You crushed it completely!'],
+  ['🚀 BLAST OFF! 🚀','Another lesson conquered!'],
+  ['⭐ SUPERSTAR! ⭐','You are shining bright!'],
+  ['🏆 CHAMPION! 🏆','Sparky is SO proud of you!'],
+  ['🌟 LEGENDARY! 🌟','Nothing can stop you now!'],
+  ['💫 AMAZING! 💫','You just levelled up!'],
+  ['🔥 ON FIRE! 🔥','That was red hot learning!'],
+  ['🎊 WOW WOW WOW! 🎊','You are a true genius!'],
+];
+const STORY_SCENES=[
+  {chars:'🤖👧','situation':'Sparky and Alex discovered something amazing today...'},
+  {chars:'🚀🌍','situation':'On Planet Code, something incredible was about to happen...'},
+  {chars:'🔬👦','situation':'In the lab, young scientist Jamie made a breakthrough...'},
+  {chars:'🐱💻','situation':'Even Whiskers the cat was curious about this...'},
+  {chars:'🌟🧒','situation':'Our hero Zara had a brilliant idea that changed everything...'},
+];
+const getRand=(arr)=>arr[Math.floor(Math.random()*arr.length)];
+const XP_PER_CORRECT=10;
+
 function Confetti(){
   const pieces=React.useMemo(()=>Array.from({length:60},(_,i)=>({
     x:Math.random()*100,
@@ -1782,6 +1857,160 @@ function useAudio(){
   const setMute=(v)=>{muteRef.current=v;if(v)stopSpeech();};
 
   return {sounds,speak,stopSpeech,setMute};
+}
+
+
+// ─── MEMORY GAME — flip card emoji pairs ───
+function MemoryGame({game,onComplete,sounds}){
+  const pairs=game.items;
+  const allCards=React.useMemo(()=>{
+    const cards=[...pairs.map((p,i)=>({id:i*2,pairId:i,e:p.e,label:p.e})),...pairs.map((p,i)=>({id:i*2+1,pairId:i,e:p.label,label:p.label}))];
+    for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+    return cards;
+  },[]);
+  const [flipped,setFlipped]=React.useState([]);
+  const [matched,setMatched]=React.useState(new Set());
+  const [lock,setLock]=React.useState(false);
+  const [moves,setMoves]=React.useState(0);
+  const flip=(card)=>{
+    if(lock||flipped.find(c=>c.id===card.id)||matched.has(card.pairId))return;
+    sounds.click();
+    const next=[...flipped,card];
+    setFlipped(next);
+    if(next.length===2){
+      setMoves(m=>m+1);setLock(true);
+      if(next[0].pairId===next[1].pairId){
+        sounds.correct();
+        const newMatched=new Set([...matched,next[0].pairId]);
+        setMatched(newMatched);setFlipped([]);setLock(false);
+        if(newMatched.size===pairs.length)setTimeout(()=>onComplete(3),600);
+      } else {
+        sounds.wrong();
+        setTimeout(()=>{setFlipped([]);setLock(false);},900);
+      }
+    }
+  };
+  return h('div',{style:{display:'flex',flexDirection:'column',gap:10}},
+    h('p',{style:{fontWeight:800,color:'#FFE600',textAlign:'center',fontSize:'.88rem'}},'🧠 '+game.inst),
+    h('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:4}},
+      h('div',{style:{fontSize:'.78rem',fontWeight:800,color:'rgba(255,255,255,.5)'}},'Pairs found: '+matched.size+'/'+pairs.length),
+      h('div',{style:{fontSize:'.78rem',fontWeight:800,color:'rgba(255,255,255,.5)'}},'Moves: '+moves)
+    ),
+    h('div',{style:{display:'grid',gridTemplateColumns:`repeat(${Math.min(4,allCards.length/2+1)},1fr)`,gap:8}},
+      allCards.map(card=>{
+        const isFlipped=!!flipped.find(c=>c.id===card.id);
+        const isMatched=matched.has(card.pairId);
+        return h('div',{key:card.id,
+          style:{height:64,borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center',
+            fontSize:isFlipped||isMatched?'1.5rem':'.8rem',
+            cursor:isMatched?'default':'pointer',
+            background:isMatched?'rgba(57,255,20,.2)':isFlipped?'rgba(0,212,255,.2)':'rgba(255,255,255,.08)',
+            border:`2px solid ${isMatched?'#39FF14':isFlipped?'#00D4FF':'rgba(255,255,255,.15)'}`,
+            transition:'all .2s',transform:isFlipped||isMatched?'scale(1.05)':'scale(1)',
+            fontWeight:900,color:'white'},
+          onClick:()=>flip(card)},
+          isFlipped||isMatched?card.e:'?'
+        );
+      })
+    ),
+    matched.size===pairs.length&&h('div',{style:{textAlign:'center',padding:'12px 0'},className:'pop'},
+      h('div',{style:{fontSize:'1.1rem',fontWeight:900,color:'#39FF14'}},'🎉 All matched in '+moves+' moves!')
+    )
+  );
+}
+
+// ─── STORY GAME — choose-your-adventure ───
+function StoryGame({game,onComplete,sounds}){
+  const [step,setStep]=React.useState(0);
+  const [xp,setXp]=React.useState(0);
+  const [history,setHistory]=React.useState([]);
+  const current=game.steps[step];
+  const pick=(choice,i)=>{
+    sounds.click();
+    const gained=choice.correct?15:5;
+    setXp(x=>x+gained);
+    setHistory(h=>[...h,{q:current.scene,picked:choice.text,correct:choice.correct,xp:gained}]);
+    if(choice.correct)sounds.correct(); else sounds.wrong();
+    setTimeout(()=>{
+      if(step<game.steps.length-1)setStep(s=>s+1);
+      else onComplete(xp>=game.steps.length*10?3:2);
+    },700);
+  };
+  if(!current)return null;
+  return h('div',{style:{display:'flex',flexDirection:'column',gap:10}},
+    h('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:2}},
+      h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'.85rem',color:'#FFE600'}},'📖 Scene '+(step+1)+'/'+game.steps.length),
+      h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'.85rem',color:'#00D4FF'}},'⚡ '+xp+' XP')
+    ),
+    h('div',{key:'scene-'+step,className:'pop slideUp',style:{background:'linear-gradient(135deg,rgba(0,212,255,.1),rgba(0,0,0,.3))',border:'1.5px solid rgba(0,212,255,.3)',borderRadius:20,padding:'16px 14px'}},
+      h('div',{style:{fontSize:'2.5rem',textAlign:'center',marginBottom:8}},current.emoji||'🌟'),
+      h('div',{style:{fontWeight:900,fontSize:'1rem',color:'white',lineHeight:1.55,marginBottom:12,textAlign:'center'}},current.scene),
+      h('div',{style:{fontWeight:800,fontSize:'.85rem',color:'#FFE600',marginBottom:8,textAlign:'center'}},'What happens next?')
+    ),
+    h('div',{style:{display:'flex',flexDirection:'column',gap:7}},
+      current.choices.map((c,i)=>h('button',{key:i,className:'kb',
+        style:{textAlign:'left',fontSize:'.88rem',padding:'11px 14px',
+          background:'rgba(255,255,255,.07)',color:'white',letterSpacing:.2,lineHeight:1.3},
+        onClick:()=>pick(c,i)},
+        h('span',{style:{marginRight:8}},'▶'),c.text
+      ))
+    ),
+    history.length>0&&h('div',{style:{display:'flex',gap:4,flexWrap:'wrap',marginTop:4}},
+      history.map((h2,i)=>h('div',{key:i,style:{fontSize:'.7rem',fontWeight:800,padding:'3px 8px',borderRadius:20,
+        background:h2.correct?'rgba(57,255,20,.15)':'rgba(255,0,110,.15)',
+        color:h2.correct?'#39FF14':'#FF6699'}},
+        (h2.correct?'✅ ':'❌ ')+'+'+ h2.xp+'XP'))
+    )
+  );
+}
+
+// ─── SCRAMBLE GAME — unscramble the word ───
+function ScrambleGame({game,onComplete,sounds}){
+  const [idx,setIdx]=React.useState(0);
+  const [guess,setGuess]=React.useState('');
+  const [feedback,setFeedback]=React.useState(null);
+  const [score,setScore]=React.useState(0);
+  const item=game.items[idx];
+  const scrambled=React.useMemo(()=>{
+    if(!item)return '';
+    const a=item.word.toUpperCase().split('');
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+    return a.join('');
+  },[idx]);
+  const check=()=>{
+    if(!guess.trim())return;
+    const ok=guess.trim().toUpperCase()===item.word.toUpperCase();
+    sounds[ok?'correct':'wrong']();
+    setFeedback(ok);
+    setTimeout(()=>{
+      if(ok)setScore(s=>s+1);
+      setGuess('');setFeedback(null);
+      if(idx<game.items.length-1)setIdx(i=>i+1);
+      else onComplete(score+1>=game.items.length?3:score+1>=game.items.length-1?2:1);
+    },900);
+  };
+  if(!item)return null;
+  return h('div',{style:{display:'flex',flexDirection:'column',gap:12}},
+    h('div',{style:{display:'flex',justifyContent:'space-between'}},
+      h('p',{style:{fontWeight:800,color:'#FFE600',fontSize:'.88rem'}},'🔤 '+game.inst),
+      h('div',{style:{fontFamily:"'Fredoka One',cursive",color:'#00D4FF',fontSize:'.88rem'}},'✅ '+score+'/'+game.items.length)
+    ),
+    h('div',{key:'scr-'+idx,className:'pop slideUp',style:{background:'rgba(255,255,255,.07)',border:'1.5px solid rgba(255,255,255,.15)',borderRadius:20,padding:'20px',textAlign:'center'}},
+      h('div',{style:{fontSize:'1rem',fontWeight:800,color:'rgba(255,255,255,.5)',marginBottom:8}},item.hint),
+      h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'2rem',letterSpacing:6,color:'#FFE600',marginBottom:6,textShadow:'0 0 20px rgba(255,230,0,.4)'}},scrambled),
+      h('div',{style:{fontSize:'.75rem',fontWeight:800,color:'rgba(255,255,255,.35)'}},'Unscramble the letters!')
+    ),
+    h('div',{style:{display:'flex',gap:8}},
+      h('input',{className:'auth-input',style:{flex:1,padding:'12px 16px',fontSize:'1.1rem',letterSpacing:2,textTransform:'uppercase',
+        borderColor:feedback===null?'rgba(255,255,255,.2)':feedback?'#39FF14':'#FF006E'},
+        placeholder:'Type the word...',value:guess,
+        onChange:e=>setGuess(e.target.value.toUpperCase()),
+        onKeyDown:e=>e.key==='Enter'&&check()}),
+      h('button',{className:'kb',style:{padding:'12px 16px',background:'linear-gradient(135deg,#FFE600,#FF8C00)',color:'#070118',fontSize:'1rem',flexShrink:0},onClick:check},'GO!')
+    ),
+    feedback===true&&h('div',{style:{textAlign:'center',color:'#39FF14',fontWeight:900,fontSize:'1rem'},className:'pop'},'🎉 '+getRand(CORRECT_MSGS)),
+    feedback===false&&h('div',{style:{textAlign:'center',color:'#FF6699',fontWeight:900,fontSize:'.9rem'},className:'pop'},'The word was: '+item.word.toUpperCase()+' — '+getRand(WRONG_MSGS))
+  );
 }
 
 function App(){
@@ -2857,7 +3086,23 @@ function App(){
       ),
       phase==='learn'&&h('div',{className:'slideUp',style:{display:'flex',flexDirection:'column',gap:14}},
         h('div',{style:{display:'flex',alignItems:'center',gap:10,marginBottom:4}},h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'.95rem',color:'rgba(255,255,255,.4)'}},`📖 Slide ${slideIdx+1}/${lesson.slides.length}`),h('div',{style:{display:'flex',gap:5,marginLeft:'auto'}},lesson.slides.map((_,i)=>h('div',{key:i,style:{width:9,height:9,borderRadius:'50%',transition:'background .3s',background:i===slideIdx?modData.color:i<slideIdx?'rgba(255,255,255,.4)':'rgba(255,255,255,.12)'}})  ))),
-        h('div',{key:`slide-${slideIdx}`,style:{background:'rgba(255,255,255,.07)',border:`1.5px solid ${modData.color}44`,borderRadius:22,padding:'22px 18px',textAlign:'center'},className:'pop'},h('div',{style:{fontSize:'4rem',marginBottom:12}},lesson.slides[slideIdx].e),h('h3',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.45rem',color:modData.color,marginBottom:10}},lesson.slides[slideIdx].title),h('p',{style:{fontWeight:800,lineHeight:1.65,color:'rgba(255,255,255,.88)',fontSize:'.93rem'}},lesson.slides[slideIdx].text)),
+        h('div',{key:`slide-${slideIdx}`,style:{background:'rgba(255,255,255,.07)',border:`1.5px solid ${modData.color}44`,borderRadius:22,overflow:'hidden'},className:'pop'},
+            h('div',{style:{background:`linear-gradient(135deg,${modData.color}22,rgba(0,0,0,.2))`,padding:'14px 16px 10px',borderBottom:`1px solid ${modData.color}22`,display:'flex',alignItems:'center',gap:12}},
+              h('div',{style:{fontSize:'3rem',lineHeight:1,flexShrink:0}},lesson.slides[slideIdx].e),
+              h('h3',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.2rem',color:modData.color,lineHeight:1.25}},lesson.slides[slideIdx].title)
+            ),
+            h('div',{style:{padding:'14px 16px 16px',display:'flex',flexDirection:'column',gap:10}},
+              lesson.slides[slideIdx].scene&&h('div',{style:{background:'rgba(0,0,0,.3)',borderRadius:12,padding:'10px 12px',display:'flex',gap:8,alignItems:'flex-start'}},
+                h('div',{style:{fontSize:'1.1rem',flexShrink:0}},'📖'),
+                h('div',{style:{fontSize:'.82rem',fontWeight:800,color:'rgba(255,230,150,.9)',lineHeight:1.5,fontStyle:'italic'}},'"'+lesson.slides[slideIdx].scene+'"')
+              ),
+              h('p',{style:{fontWeight:800,lineHeight:1.65,color:'rgba(255,255,255,.9)',fontSize:'.93rem',margin:0}},lesson.slides[slideIdx].text),
+              lesson.slides[slideIdx].fact&&h('div',{style:{background:`${modData.color}18`,border:`1px solid ${modData.color}35`,borderRadius:10,padding:'8px 12px',display:'flex',gap:7,alignItems:'flex-start'}},
+                h('div',{style:{fontSize:'.95rem',flexShrink:0}},'💡'),
+                h('div',{style:{fontSize:'.78rem',fontWeight:900,color:modData.color,lineHeight:1.45}},'Did you know? '+lesson.slides[slideIdx].fact)
+              )
+            )
+          ),
         h('div',{style:{display:'flex',gap:10,alignItems:'center'}},
           slideIdx>0&&h('button',{className:'kb',style:{padding:'11px 18px',background:'rgba(255,255,255,.1)',color:'white',fontSize:'.9rem'},onClick:()=>{sounds.click();setSlideIdx(s=>s-1);}},'← Back'),
           h('button',{className:'kb',style:{flex:1,fontSize:'1rem',padding:'13px',background:modData.grad,color:'white',boxShadow:`0 4px 22px ${modData.shadow}`},onClick:nextSlide},slideIdx<lesson.slides.length-1?'Next Slide →':'Play the Game! 🎮')
@@ -2875,7 +3120,10 @@ function App(){
         lesson.game.type==='grid'&&h(GridGame,{game:lesson.game,onComplete:handleGameComplete,sounds}),
         lesson.game.type==='tag'&&h(TagGame,{game:lesson.game,onComplete:handleGameComplete,sounds}),
         lesson.game.type==='pycode'&&h(PythonGame,{game:lesson.game,onComplete:handleGameComplete,sounds}),
-        lesson.game.type==='jscode'&&h(JSGame,{game:lesson.game,onComplete:handleGameComplete,sounds})
+        lesson.game.type==='jscode'&&h(JSGame,{game:lesson.game,onComplete:handleGameComplete,sounds}),
+        lesson.game.type==='memory'&&h(MemoryGame,{game:lesson.game,onComplete:handleGameComplete,sounds}),
+        lesson.game.type==='story'&&h(StoryGame,{game:lesson.game,onComplete:handleGameComplete,sounds}),
+        lesson.game.type==='scramble'&&h(ScrambleGame,{game:lesson.game,onComplete:handleGameComplete,sounds})
       ),
       phase==='chat'&&h('div',{className:'slideUp',style:{display:'flex',flexDirection:'column',gap:10}},
         h('div',{style:{background:`linear-gradient(135deg,${sparkyColor.body.match(/#[0-9A-Fa-f]{6}/)?.[0]||'#1155FF'}22,rgba(0,0,0,.2))`,border:`2px solid ${sparkyColor.accent}44`,borderRadius:20,padding:'14px 16px',marginBottom:4}},
@@ -2899,14 +3147,29 @@ function App(){
         h('button',{className:'kb',style:{fontSize:'1.1rem',padding:'15px',background:'linear-gradient(135deg,#FFE600,#FF8C00)',color:'#070118',marginTop:4,width:'100%',boxShadow:'0 0 20px rgba(255,230,0,.4)',letterSpacing:.5},onClick:()=>goPhase('quiz')},'⭐ Ready for the Quiz? Tap here!')
       ),
       phase==='quiz'&&h('div',{className:'slideUp',style:{display:'flex',flexDirection:'column',gap:14}},
-        h('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:4}},h('h3',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.2rem',color:'#FFE600'}},'⭐ Quiz Time!'),h('div',{style:{fontWeight:900,fontSize:'.82rem',color:'rgba(255,255,255,.45)'}},`${quizIdx+1} / ${lesson.quiz.length}`)),
+        h('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:4}},h('h3',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.2rem',color:'#FFE600'}},'⭐ Quiz Time!'),h('div',{style:{display:'flex',gap:8,alignItems:'center'}},h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'.78rem',color:'#00D4FF'}},'⚡ '+(quizAns.filter(Boolean).length*XP_PER_CORRECT)+' XP'),h('div',{style:{fontWeight:900,fontSize:'.82rem',color:'rgba(255,255,255,.45)'}},`${quizIdx+1} / ${lesson.quiz.length}`)  )),
         h('div',{className:'phase-bar',style:{marginBottom:8}},h('div',{className:'phase-fill',style:{width:`${(quizIdx/lesson.quiz.length)*100}%`,background:'linear-gradient(90deg,#FFE600,#FF8C00)'}})),
         h('div',{key:`qz-${quizIdx}`,style:{background:'rgba(255,230,0,.07)',border:'1.5px solid rgba(255,230,0,.2)',borderRadius:16,padding:'16px',fontWeight:900,fontSize:'.97rem',lineHeight:1.45,marginBottom:6},className:'pop'},lesson.quiz[quizIdx].q),
-        h('div',{style:{display:'flex',flexDirection:'column',gap:8}},lesson.quiz[quizIdx].o.map((opt,i)=>h('button',{key:`qz-${quizIdx}-${i}`,className:'option-btn',style:{background:quizPicked===null?'rgba(255,255,255,.07)':i===lesson.quiz[quizIdx].a?'rgba(57,255,20,.2)':quizPicked===i?'rgba(255,0,110,.2)':'rgba(255,255,255,.04)',borderColor:quizPicked===null?'rgba(255,255,255,.25)':i===lesson.quiz[quizIdx].a?'#39FF14':quizPicked===i?'#FF006E':'rgba(255,255,255,.1)',color:quizPicked===null?'white':i===lesson.quiz[quizIdx].a?'#39FF14':quizPicked===i?'#FF006E':'rgba(255,255,255,.4)',pointerEvents:quizPicked!==null?'none':'auto',transition:'all .2s'},onClick:()=>pickQuizAns(i)},h('span',{style:{marginRight:8}},quizPicked!==null?(i===lesson.quiz[quizIdx].a?'✅':quizPicked===i?'❌':'  '):'▶'),opt)))
+        h('div',{style:{display:'flex',flexDirection:'column',gap:8}},lesson.quiz[quizIdx].o.map((opt,i)=>h('button',{key:`qz-${quizIdx}-${i}`,className:'option-btn',style:{background:quizPicked===null?'rgba(255,255,255,.07)':i===lesson.quiz[quizIdx].a?'rgba(57,255,20,.2)':quizPicked===i?'rgba(255,0,110,.2)':'rgba(255,255,255,.04)',borderColor:quizPicked===null?'rgba(255,255,255,.25)':i===lesson.quiz[quizIdx].a?'#39FF14':quizPicked===i?'#FF006E':'rgba(255,255,255,.1)',color:quizPicked===null?'white':i===lesson.quiz[quizIdx].a?'#39FF14':quizPicked===i?'#FF006E':'rgba(255,255,255,.4)',pointerEvents:quizPicked!==null?'none':'auto',transition:'all .2s'},onClick:()=>pickQuizAns(i)},
+          h('span',{style:{marginRight:8}},quizPicked!==null?(i===lesson.quiz[quizIdx].a?'✅':quizPicked===i?'❌':'  '):'▶'),opt))),
+        quizPicked!==null&&h('div',{key:'qfb-'+quizIdx,className:'pop slideUp',style:{marginTop:4,textAlign:'center',padding:'8px 14px',borderRadius:14,
+          background:quizPicked===lesson.quiz[quizIdx].a?'rgba(57,255,20,.12)':'rgba(255,0,110,.1)',
+          border:`1px solid ${quizPicked===lesson.quiz[quizIdx].a?'rgba(57,255,20,.3)':'rgba(255,0,110,.2)'}`,
+          fontWeight:900,fontSize:'.9rem',
+          color:quizPicked===lesson.quiz[quizIdx].a?'#39FF14':'#FF6699'}},
+          quizPicked===lesson.quiz[quizIdx].a
+            ?getRand(CORRECT_MSGS)+' +'+XP_PER_CORRECT+'⚡'
+            :getRand(WRONG_MSGS)
+        )
       ),
       phase==='celebrate'&&h('div',{className:'slideUp',style:{display:'flex',flexDirection:'column',alignItems:'center',gap:16,textAlign:'center',padding:'8px 0'}},
         h(Sparky,{mood:'celebrating',size:110,cls:'bounce',bodyColor:sparkyColor.body,accentColor:sparkyColor.accent,botType:sparkyBotType}),
-        h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'2.1rem',color:'#FFE600'},className:'rainbow'},'🎉 AMAZING! 🎉'),
+        h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'2.1rem',color:'#FFE600'},className:'rainbow'},
+          (()=>{const cm=getRand(CELEBRATE_MSGS);return cm[0];})()
+        ),
+        h('div',{style:{fontWeight:800,fontSize:'.85rem',color:'rgba(255,255,255,.55)',marginBottom:4}},
+          (()=>{const cm=getRand(CELEBRATE_MSGS);return cm[1];})()
+        ),
         h('div',{style:{background:'rgba(255,255,255,.08)',borderRadius:22,padding:'18px 20px',width:'100%',maxWidth:350}},
           h('div',{style:{fontSize:'2rem',marginBottom:6}},Array(stars[lesson.id]||3).fill('⭐').join('')),
           h('div',{style:{fontWeight:900,fontSize:'1.1rem',color:modData.color,marginBottom:4}},`${lesson.title} — Complete!`),
