@@ -282,7 +282,7 @@ const TIER2_MODULES=[
 {id:9,title:'Computational Thinking',sub:'Think like a programmer!',emoji:'🧠',color:'#FF8C00',grad:'linear-gradient(135deg,#FF8C00,#CC4400)',shadow:'rgba(255,140,0,.5)',badgeName:'Thinker Badge',tier:2,
  lessons:[
   {id:33,title:'Break It Down!',intro:'Every big problem is just a bunch of SMALL problems! Computational thinking is how programmers break huge challenges into tiny steps they can solve one at a time. Today you learn to think like a pro!',
-   slides:[{title:'Decomposition!',text:'Decomposition means breaking a big problem into smaller easier pieces. Making a game? Break it into: player, enemies, score, levels. Then solve each piece!',e:'🧩'},{title:'Find the Pattern',text:'After breaking problems down look for repeated parts. If you spot something happening over and over a loop can handle it automatically!',e:'🔍'},{title:'Abstraction!',text:'Abstraction means hiding complex details and showing only what matters. A car has thousands of parts but you just use a steering wheel and pedals!',e:'🎭'}],
+   slides:[{title:'Decomposition!',scene:'Maya stared at her robotics project. It seemed impossible. Then her mentor smiled. "Every big problem," she said, "is just small problems wearing a costume. Let\'s find the costume."',text:'Decomposition means breaking a big problem into smaller easier pieces. Making a game? Break it into: player, enemies, score, levels. Then solve each piece!',e:'🧩'},{title:'Find the Pattern',fact:'NASA engineers use decomposition to build rockets! The Saturn V had over 3 million parts — each one designed by a separate team solving their own small problem.',text:'After breaking problems down look for repeated parts. If you spot something happening over and over a loop can handle it automatically!',e:'🔍'},{title:'Abstraction!',text:'Abstraction means hiding complex details and showing only what matters. A car has thousands of parts but you just use a steering wheel and pedals!',e:'🎭'}],
    game:{type:'seq',title:'Decompose the Problem!',inst:'Put the problem-solving steps in the correct order!',steps:['Understand the full problem 🎯','Break it into small pieces 🧩','Solve each piece separately 🔧','Put the pieces together 🏗️','Test the whole solution ✅'],correct:[0,1,2,3,4]},
    quiz:[{q:'What is decomposition?',o:['Making problems bigger','Breaking big problems into smaller pieces','A type of loop'],a:1},{q:'What do you do after decomposing a problem?',o:['Give up','Look for patterns in the pieces','Start over'],a:1},{q:'What is abstraction?',o:['Making everything visible','Hiding complexity and showing only what matters','A type of variable'],a:1}]},
   {id:34,title:'Algorithms',intro:'An ALGORITHM is just a set of step-by-step instructions for solving a problem! Every recipe, every GPS direction, every game you play follows an algorithm. Today you learn to write your own!',
@@ -440,7 +440,7 @@ const TIER4_MODULES=[
 {id:25,title:'React Fundamentals',sub:'Build modern component UIs!',emoji:'⚛️',color:'#61DAFB',grad:'linear-gradient(135deg,#61DAFB,#0088BB)',shadow:'rgba(97,218,251,.5)',badgeName:'React Rookie Badge',tier:4,
  lessons:[
   {id:97,title:'Components & JSX',intro:'React is the most popular JavaScript UI library on Earth! Used by Facebook, Airbnb, Netflix, Shopify and millions of apps. React builds UIs from COMPONENTS — reusable self-contained pieces. Think LEGO bricks for web apps!',
-   slides:[{title:'What is React?',text:'React lets you build UIs from components — functions that return HTML-like JSX. Each component manages its own logic and appearance. Build once, compose everywhere. This is how modern web apps are built!',e:'⚛️'},{title:'JSX Syntax!',text:'JSX looks like HTML but it is JavaScript! const Button = () => <button>Click me</button>. It compiles to React.createElement calls. Always return ONE root element — wrap siblings in a div or empty fragment <>!</>!',e:'📄'},{title:'Props — Component Inputs!',text:'Props pass data into components like function arguments! <Greeting name="Alex" /> passes name as a prop. Inside the component use props.name or destructure: const Greeting = ({name}) => <h1>Hello {name}!</h1>',e:'📦'}],
+   slides:[{title:'What is React?',scene:'Priya had been copying and pasting the same button code 47 times. Her senior dev stopped by. "What if you wrote it once," he said quietly, "and used it everywhere?" Priya opened React\'s docs and her world shifted.',text:'React lets you build UIs from components — functions that return HTML-like JSX. Each component manages its own logic and appearance. Build once, compose everywhere. This is how modern web apps are built!',e:'⚛️'},{title:'JSX Syntax!',fact:'Meta (Facebook) built React to handle 1 billion+ users updating their feeds simultaneously. The component model they invented is now used by Netflix, Airbnb, Shopify and thousands of other companies.',text:'JSX looks like HTML but it is JavaScript! const Button = () => <button>Click me</button>. It compiles to React.createElement calls. Always return ONE root element — wrap siblings in a div or empty fragment <>!</>!',e:'📄'},{title:'Props — Component Inputs!',text:'Props pass data into components like function arguments! <Greeting name="Alex" /> passes name as a prop. Inside the component use props.name or destructure: const Greeting = ({name}) => <h1>Hello {name}!</h1>',e:'📦'}],
    game:{type:'jscode',title:'Components as Functions!',inst:'Run this code to see how React components work as plain JS functions first!',starter:'// React components are just functions that return UI\n// Before JSX, this is the pure concept:\n\nconst Greeting = (props) => {\n  return `<h1>Hello, ${props.name}!</h1>`;\n};\n\nconst Button = (props) => {\n  return `<button class="${props.variant}">${props.label}</button>`;\n};\n\nconst Card = (props) => {\n  return `<div class="card">\n  ${Greeting({name: props.title})}\n  <p>${props.description}</p>\n  ${Button({label: "Learn More", variant: "primary"})}\n</div>`;\n};\n\n// Compose components together\nconsole.log("=== Component Output ===");\nconsole.log(Greeting({name: "React Developer"}));\nconsole.log(Button({label: "Click Me!", variant: "primary"}));\nconsole.log(Card({title: "STEM Spark", description: "Learn coding with AI!"}));',hint:'This shows the CONCEPT behind React components. Real React uses JSX syntax but the idea is identical!',check:'contains',expected:'React Developer'},
    quiz:[{q:'What is a React component?',o:['A CSS class','A function that returns UI (JSX)','A type of database'],a:1},{q:'What are props in React?',o:['CSS properties','Data passed INTO a component','Component methods'],a:1},{q:'JSX compiles to what?',o:['HTML files','CSS rules','React.createElement() calls'],a:2}]},
   {id:98,title:'State & useState',intro:'State is what makes React components ALIVE! State is data that changes over time — a counter, a toggle, user input. When state changes React automatically re-renders the component with the new data. This is the magic of React!',
@@ -602,7 +602,7 @@ const TIER3_MODULES=[
 {id:17,title:'JavaScript Fundamentals',sub:'Make web pages come alive!',emoji:'⚡',color:'#F7DF1E',grad:'linear-gradient(135deg,#F7DF1E,#CC9900)',shadow:'rgba(247,223,30,.5)',badgeName:'JS Spark Badge',tier:3,
  lessons:[
   {id:65,title:'JavaScript Intro',intro:'JavaScript is THE language of the web! Every interactive thing on every website — buttons, popups, animations, games — is powered by JavaScript. Python runs on servers, but JavaScript runs right inside every browser on Earth!',
-   slides:[{title:'What is JavaScript?',text:'JavaScript is the only language that runs natively in web browsers. It makes HTML pages interactive and dynamic. One line of JS can change the entire look of a page instantly!',e:'⚡'},{title:'JS vs Python',text:'Python is great for servers and data. JavaScript is king of the browser. Both use variables, functions, loops and conditions — but the syntax is slightly different!',e:'⚔️'},{title:'The Console!',text:'The browser console is where JavaScript output appears. In Chrome press F12 then click Console. console.log("Hello!") prints Hello! there. It is the programmer\'s best friend!',e:'🖥️'}],
+   slides:[{title:'What is JavaScript?',scene:'Jordan clicked the button and absolutely nothing happened. "It\'s HTML," they muttered. Then they added one line of JavaScript. The button glowed, the page transformed. "Oh," Jordan whispered. "THAT\'s what JavaScript is for."',text:'JavaScript is the only language that runs natively in web browsers. It makes HTML pages interactive and dynamic. One line of JS can change the entire look of a page instantly!',e:'⚡'},{title:'JS vs Python',fact:'JavaScript runs on 98% of all websites on Earth. It was created in just 10 days in 1995 by Brendan Eich — and it went on to power the entire modern web!',text:'Python is great for servers and data. JavaScript is king of the browser. Both use variables, functions, loops and conditions — but the syntax is slightly different!',e:'⚔️'},{title:'The Console!',text:'The browser console is where JavaScript output appears. In Chrome press F12 then click Console. console.log("Hello!") prints Hello! there. It is the programmer\'s best friend!',e:'🖥️'}],
    game:{type:'pick',title:'JS Knowledge Check!',inst:'Choose the correct answer about JavaScript!',items:[{q:'Where does JavaScript run?',o:['Only on servers','Inside web browsers','Only in Python'],a:1},{q:'What does console.log() do?',o:['Saves to a file','Prints output to the browser console','Creates a variable'],a:1},{q:'Can JavaScript change a webpage after it loads?',o:['No pages are fixed','Yes that is its superpower','Only with Python help'],a:1}]},
    quiz:[{q:'What is JavaScript mainly used for?',o:['Server databases','Making web pages interactive','Image editing'],a:1},{q:'Every web browser can run...',o:['Python','JavaScript natively','Only HTML'],a:1},{q:'What is the browser console?',o:['A gaming device','Where JavaScript output and errors appear','A file storage system'],a:1}]},
   {id:66,title:'Variables & Types in JS',intro:'JavaScript variables are similar to Python but with some key differences! You use let and const instead of just writing the name. let can change, const cannot. Understanding this prevents a huge category of bugs before they happen!',
@@ -2032,6 +2032,7 @@ function App(){
   const ALL_MODULES=isPro?[...MODULES,...TIER2_MODULES,...TIER3_MODULES,...TIER4_MODULES]:MODULES;
   const [screen,setScreen]=useState(()=>getCurrentUser()?'welcome':'auth');
   const [bonusTrackId,setBonusTrackId]=useState(null);
+  const [mpState,setMpState]=useState(null); // multiplayer state
   const [lessonSearch,setLessonSearch]=useState('');
   const [bonusMod,setBonusMod]=useState(null);
   const [bonusLessonIdx,setBonusLessonIdx]=useState(0);
@@ -2132,6 +2133,7 @@ function App(){
     h('h2',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.1rem',color:'#FFE600',flex:1,textAlign:'center',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},title),
     showIcons&&h('div',{style:{display:'flex',gap:6,flexShrink:0}},
       h('button',{className:'mute-btn',style:{fontSize:'.9rem'},onClick:()=>{sounds.click();setScreen('leaderboard');},title:'Leaderboard'},'🏆'),
+      h('button',{className:'mute-btn',style:{fontSize:'.9rem'},onClick:()=>{sounds.click();setScreen('multiplayer');setMpState({phase:'setup',p1:'',p2:'',questions:[],qi:0,scores:[0,0],turn:0,answers:[]});},title:'2-Player Challenge'},'⚔️'),
       h('button',{className:'mute-btn',style:{fontSize:'.9rem'},onClick:()=>{sounds.click();setScreen('profile');},title:'Profile'},'👤'),
       h('button',{className:'mute-btn',onClick:toggleMute},muted?'🔇':'🔊')
     ),
@@ -2467,7 +2469,95 @@ function App(){
   }
 
   // ─── PARENT DASHBOARD ───
-  if(screen==='parent'){
+  if(screen==='multiplayer'){
+  const initMp=()=>{
+    const allQ=[];
+    [...MODULES,...TIER2_MODULES,...TIER3_MODULES,...TIER4_MODULES].forEach(mod=>{
+      mod.lessons.forEach(les=>{
+        if(les.quiz)les.quiz.forEach(q=>allQ.push({...q,lessonTitle:les.title,modTitle:mod.title}));
+      });
+    });
+    // shuffle and pick 10
+    for(let i=allQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[allQ[i],allQ[j]]=[allQ[j],allQ[i]];}
+    return allQ.slice(0,10);
+  };
+  const mp=mpState||{phase:'setup',p1:'',p2:'',questions:[],qi:0,scores:[0,0],turn:0,answers:[]};
+  const players=[mp.p1||'Player 1',mp.p2||'Player 2'];
+  
+  if(mp.phase==='setup')return h('div',{style:{height:'100%',background:'linear-gradient(135deg,#1a0040,#000820)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:20,gap:16}},
+    h('button',{onClick:()=>setScreen('modules'),style:{position:'absolute',top:16,left:16,background:'rgba(255,255,255,.1)',color:'#fff',border:'none',borderRadius:8,padding:'8px 14px',cursor:'pointer'}},'← Back'),
+    h('div',{style:{fontSize:'3rem'}},'⚔️'),
+    h('h2',{style:{color:'#FFE600',fontFamily:'Orbitron',margin:0}},'2-Player Quiz Challenge'),
+    h('p',{style:{color:'rgba(255,255,255,.7)',textAlign:'center',maxWidth:300}},'Take turns answering 10 questions. Most correct answers wins!'),
+    h('input',{placeholder:'Player 1 name',value:mp.p1,onChange:e=>setMpState({...mp,p1:e.target.value}),style:{padding:'10px 16px',borderRadius:10,border:'2px solid #FF006E',background:'rgba(255,255,255,.1)',color:'#fff',fontSize:'1rem',width:'100%',maxWidth:280,outline:'none'}}),
+    h('input',{placeholder:'Player 2 name',value:mp.p2,onChange:e=>setMpState({...mp,p2:e.target.value}),style:{padding:'10px 16px',borderRadius:10,border:'2px solid #00D4FF',background:'rgba(255,255,255,.1)',color:'#fff',fontSize:'1rem',width:'100%',maxWidth:280,outline:'none'}}),
+    h('button',{onClick:()=>{sounds.click();setMpState({...mp,phase:'quiz',questions:initMp(),qi:0,scores:[0,0],turn:0,answers:[]});},style:{padding:'14px 32px',borderRadius:12,background:'linear-gradient(135deg,#FF006E,#8B00FF)',color:'#fff',border:'none',fontSize:'1.1rem',fontWeight:700,cursor:'pointer',fontFamily:'Orbitron',marginTop:8}},'🚀 START BATTLE!')
+  );
+  
+  if(mp.phase==='quiz'){
+    const q=mp.questions[mp.qi];
+    const currentPlayer=players[mp.turn];
+    const color=mp.turn===0?'#FF006E':'#00D4FF';
+    return h('div',{style:{height:'100%',background:'linear-gradient(135deg,#1a0040,#000820)',display:'flex',flexDirection:'column',padding:20,gap:12}},
+      h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
+        h('div',{style:{textAlign:'center'}},
+          h('div',{style:{color:'#FF006E',fontWeight:700,fontSize:'.9rem'}},'⚔️ '+players[0]),
+          h('div',{style:{color:'#FFE600',fontSize:'1.8rem',fontWeight:900}},mp.scores[0])
+        ),
+        h('div',{style:{textAlign:'center',color:'rgba(255,255,255,.5)',fontSize:'.8rem'}},mp.qi+1+'/10'),
+        h('div',{style:{textAlign:'center'}},
+          h('div',{style:{color:'#00D4FF',fontWeight:700,fontSize:'.9rem'}},'⚔️ '+players[1]),
+          h('div',{style:{color:'#FFE600',fontSize:'1.8rem',fontWeight:900}},mp.scores[1])
+        )
+      ),
+      h('div',{style:{background:'rgba(255,255,255,.05)',borderRadius:12,padding:12,textAlign:'center'}},
+        h('div',{style:{color:color,fontWeight:700,fontSize:'.9rem',marginBottom:4}},'🎯 '+currentPlayer+"'s turn!"),
+        h('div',{style:{color:'rgba(255,255,255,.6)',fontSize:'.75rem'}},q.lessonTitle)
+      ),
+      h('div',{style:{background:'rgba(255,255,255,.08)',borderRadius:12,padding:16,flex:1,display:'flex',alignItems:'center',justifyContent:'center',textAlign:'center'}},
+        h('p',{style:{color:'#fff',fontSize:'1rem',margin:0,lineHeight:1.5}},q.q)
+      ),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:8}},
+        q.o.map((opt,oi)=>h('button',{key:oi,onClick:()=>{
+          sounds.click();
+          const correct=oi===q.a;
+          if(correct)sounds.correct();else sounds.wrong();
+          const newScores=[...mp.scores];
+          if(correct)newScores[mp.turn]++;
+          const nextTurn=(mp.turn+1)%2;
+          const nextQi=mp.qi+1;
+          if(nextQi>=mp.questions.length){
+            setMpState({...mp,phase:'result',scores:newScores,answers:[...mp.answers,{correct,player:mp.turn}]});
+          } else {
+            setMpState({...mp,qi:nextQi,turn:nextTurn,scores:newScores,answers:[...mp.answers,{correct,player:mp.turn}]});
+          }
+        },style:{padding:'12px 16px',borderRadius:10,background:'rgba(255,255,255,.1)',color:'#fff',border:'2px solid '+color,fontSize:'.95rem',cursor:'pointer',textAlign:'left',transition:'all .2s'}},opt))
+      )
+    );
+  }
+  
+  if(mp.phase==='result'){
+    const winner=mp.scores[0]>mp.scores[1]?0:mp.scores[1]>mp.scores[0]?1:-1;
+    return h('div',{style:{height:'100%',background:'linear-gradient(135deg,#1a0040,#000820)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:20,gap:16,textAlign:'center'}},
+      h('div',{style:{fontSize:'4rem'}},winner===-1?'🤝':'🏆'),
+      h('h2',{style:{color:'#FFE600',fontFamily:'Orbitron',margin:0,fontSize:'1.3rem'}},
+        winner===-1?"IT’S A TIE! 🤝":`${players[winner]} WINS! 🎉`
+      ),
+      h('div',{style:{display:'flex',gap:24,margin:'8px 0'}},
+        players.map((p,i)=>h('div',{key:i,style:{background:'rgba(255,255,255,.08)',borderRadius:12,padding:'16px 24px'}},
+          h('div',{style:{color:i===0?'#FF006E':'#00D4FF',fontWeight:700}},'⚔️ '+p),
+          h('div',{style:{color:'#FFE600',fontSize:'2.5rem',fontWeight:900}},mp.scores[i]),
+          h('div',{style:{color:'rgba(255,255,255,.5)',fontSize:'.8rem'}},'/ 10')
+        ))
+      ),
+      h('button',{onClick:()=>{sounds.click();setMpState({...mp,phase:'setup',qi:0,scores:[0,0],turn:0,answers:[]});},style:{padding:'12px 28px',borderRadius:12,background:'linear-gradient(135deg,#FF006E,#8B00FF)',color:'#fff',border:'none',fontSize:'1rem',fontWeight:700,cursor:'pointer'}},'🔄 Play Again'),
+      h('button',{onClick:()=>setScreen('modules'),style:{padding:'12px 28px',borderRadius:12,background:'rgba(255,255,255,.1)',color:'#fff',border:'none',fontSize:'1rem',cursor:'pointer'}},'🏠 Back to Modules')
+    );
+  }
+  return null;
+}
+
+if(screen==='parent'){
     const allUsers=getUsers();
     const exportData=()=>{
       const data={
@@ -2561,6 +2651,23 @@ function App(){
             onClick:()=>{sounds.click();setScreen('certificate');}},'🎓 View & Download Certificate'),
           h('button',{className:'kb',style:{padding:'13px',fontSize:'.92rem',background:'rgba(255,255,255,.08)',color:'rgba(255,255,255,.7)'},
             onClick:exportData},'📥 Export Progress Data (JSON)'),
+          h('button',{className:'kb',style:{padding:'13px',fontSize:'.92rem',background:'rgba(0,180,255,.1)',color:'#00D4FF',border:'1.5px solid rgba(0,180,255,.25)'},
+            onClick:()=>{
+              const ud=loadUserData(authUser.email);
+              const totalLessons=146;
+              const pct=Math.round((ud.completed||[]).length/totalLessons*100);
+              const w=window.open('','_blank');
+              const badgeHtml=(ud.badges||[]).map(b=>'<span style="display:inline-block;background:#f0e8ff;border-radius:20px;padding:4px 14px;margin:4px;font-size:.85em">🏅 '+b+'</span>').join('');
+              const completedHtml=[...MODULES,...TIER2_MODULES,...TIER3_MODULES,...TIER4_MODULES].flatMap(m=>m.lessons.filter(l=>(ud.completed||[]).includes(l.id)).map(l=>'<li><b>'+m.title+':</b> '+l.title+'</li>')).join('');
+              w.document.write('<!DOCTYPE html><html><head><title>STEM Spark Progress Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#222;line-height:1.6}h1{color:#8B00FF;margin-bottom:4px}h3{color:#FF006E;margin-top:24px}.bar{background:#eee;border-radius:10px;height:22px;margin:8px 0}.fill{background:linear-gradient(90deg,#FF006E,#8B00FF);border-radius:10px;height:22px}ul{column-count:2;column-gap:20px;padding-left:18px}li{margin-bottom:4px;font-size:.9em}@media print{body{margin:15px}}</style></head><body>');
+              w.document.write('<h1>⚡ STEM Spark Academy</h1><p style="color:#888;margin:0">Progress Report for <b>'+authUser.name+'</b> &nbsp;·&nbsp; '+new Date().toLocaleDateString()+'</p>');
+              w.document.write('<h3>📊 Overall Progress</h3><p>'+ud.completed.length+' of '+totalLessons+' lessons completed <b>('+pct+'%)</b></p><div class="bar"><div class="fill" style="width:'+pct+'%"></div></div>');
+              if(badgeHtml)w.document.write('<h3>🏅 Badges Earned ('+((ud.badges||[]).length)+')</h3><div>'+badgeHtml+'</div>');
+              if(completedHtml)w.document.write('<h3>📚 Completed Lessons</h3><ul>'+completedHtml+'</ul>');
+              else w.document.write('<p><i>No lessons completed yet — keep going! 🚀</i></p>');
+              w.document.write('</body></html>');
+              w.document.close();w.print();
+            }},'🖨️ Print Progress Report'),
           h('button',{className:'kb',style:{padding:'12px',fontSize:'.88rem',background:'rgba(255,0,110,.12)',color:'#FF6699',border:'1.5px solid rgba(255,0,110,.25)'},
             onClick:()=>{if(window.confirm('Sign out?')){sounds.click();doLogout();}}},'🚪 Sign Out')
         )
