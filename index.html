@@ -322,7 +322,10 @@ async function dbSaveProgress(email,data){
       {onConflict:'email'}
     ),
     _db.from('ssa_leaderboard').upsert(
-      {email:email.toLowerCase().trim(),name,total_stars:totalStars,lessons_done:lessonsD,badges_count:badgesD,score,updated_at:new Date().toISOString()},
+      {email:email.toLowerCase().trim(),name,total_stars:totalStars,lessons_done:lessonsD,badges_count:badgesD,score,
+       sparky_bot_type:(getCurrentUser()?.sparkyBotType||'sparky'),
+       sparky_color_id:(getCurrentUser()?.sparkyColorId||'blue'),
+       updated_at:new Date().toISOString()},
       {onConflict:'email'}
     )
   ]);
@@ -336,7 +339,7 @@ async function getLeaderboardDB(){
     return[{name:u.username||u.email,email:u.email,totalStars:ts,lessonsD:ld,badgesD:bd,score:ts*10+ld*5+bd*50}];
   }
   const {data}=await _db.from('ssa_leaderboard').select('*').order('score',{ascending:false}).limit(50);
-  return(data||[]).map(r=>({...r,name:r.name,totalStars:r.total_stars,lessonsD:r.lessons_done,badgesD:r.badges_count}));
+  return(data||[]).map(r=>({...r,name:r.name,totalStars:r.total_stars,lessonsD:r.lessons_done,badgesD:r.badges_count,sparkyBotType:r.sparky_bot_type||'sparky',sparkyColorId:r.sparky_color_id||'blue'}));
 }
 // Sync-only legacy stub (for profile saves)
 function saveUserData(email,data){_cacheUD(email,data);}
@@ -3236,49 +3239,80 @@ if(screen==='parent'){
   if(screen==='leaderboard')return h('div',{style:{height:'100%',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}},
     h(StarsBg),
     h(TopBar,{title:'🏆 Leaderboard',back:'welcome',backLabel:'← Home',showIcons:false}),
-    h('div',{style:{flex:1,overflowY:'auto',padding:'12px 14px 24px',zIndex:1}},
-      h('div',{style:{textAlign:'center',padding:'8px 0 14px'}},
-        h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1rem',color:'rgba(255,255,255,.5)',marginBottom:4}},'Top Junior AI Scientists! 🎓'),
-        h('div',{style:{fontSize:'.75rem',fontWeight:800,color:'rgba(255,255,255,.3)'}},'Score = Stars×10 + Lessons×5 + Badges×50')
+    h('div',{style:{flex:1,overflowY:'auto',padding:'12px 14px 28px',zIndex:1}},
+      h('div',{style:{textAlign:'center',padding:'6px 0 16px'}},
+        h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.1rem',color:'rgba(255,255,255,.55)',marginBottom:4}},'Top Junior AI Scientists! 🎓'),
+        h('div',{style:{fontSize:'.78rem',fontWeight:700,color:'rgba(255,255,255,.28)'}},'Score = Stars×10 + Lessons×5 + Badges×50')
       ),
       (()=>{
         const lb=lbData;
         const myEmail=authUser?.email;
         const myRank=lb.findIndex(u=>u.email===myEmail);
         return h('div',null,
-          lbLoading&&h('div',{style:{textAlign:'center',padding:30,color:'rgba(255,255,255,.5)'}},
-            h('div',{style:{fontSize:'2rem'}},'⏳'),
-            h('p',{style:{marginTop:8,fontWeight:700}},'Loading leaderboard...')
+          lbLoading&&h('div',{style:{textAlign:'center',padding:40,color:'rgba(255,255,255,.5)'}},
+            h('div',{style:{fontSize:'2.5rem'}},'⏳'),
+            h('p',{style:{marginTop:10,fontWeight:700,fontSize:'1rem'}},'Loading leaderboard...')
           ),
-          !lbLoading&&lb.length===0&&h('div',{style:{textAlign:'center',padding:30}},
-            h(Sparky,{size:70,mood:'happy'}),
-            h('p',{style:{fontWeight:800,color:'rgba(255,255,255,.4)',marginTop:12}},'No scores yet! Complete lessons to appear here!')
+          !lbLoading&&lb.length===0&&h('div',{style:{textAlign:'center',padding:40}},
+            h(Sparky,{size:80,mood:'happy'}),
+            h('p',{style:{fontWeight:800,fontSize:'1rem',color:'rgba(255,255,255,.4)',marginTop:14}},'No scores yet! Complete lessons to appear here!')
           ),
           lb.slice(0,20).map((u,i)=>{
             const isMe=u.email===myEmail;
             const medals=['🥇','🥈','🥉'];
             const rankEmoji=i<3?medals[i]:`#${i+1}`;
+            const botType=u.sparkyBotType||'sparky';
             const userSparkyColor=SPARKY_COLORS.find(c=>c.id===(u.sparkyColorId||'blue'))||SPARKY_COLORS[0];
             const displayName=u.name||u.username||(u.email?u.email.split('@')[0]:'Player');
-            return h('div',{key:u.email||i,className:`lb-row${isMe?' me':''}`,style:{animation:`slideUp .3s ease-out ${i*.04}s both`,display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:14,background:isMe?'rgba(255,230,0,.1)':'rgba(255,255,255,.06)',border:`1px solid ${isMe?'rgba(255,230,0,.3)':'rgba(255,255,255,.08)'}`,marginBottom:6}},
-              h('div',{style:{width:32,textAlign:'center',flexShrink:0,fontSize:i<3?'1.3rem':'.82rem',fontFamily:"'Fredoka One',cursive",fontWeight:900,color:i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'rgba(255,255,255,.45)'}},rankEmoji),
-              h('div',{style:{width:40,height:40,flexShrink:0,borderRadius:'50%',overflow:'hidden',background:'rgba(0,0,0,.35)',border:`2px solid ${isMe?'rgba(255,230,0,.4)':'rgba(255,255,255,.12)'}`,display:'flex',alignItems:'flex-end',justifyContent:'center',position:'relative'}},
-                h('div',{style:{position:'absolute',bottom:-3,left:'50%',transform:'translateX(-50%)'}},
-                  h(Sparky,{size:46,anim:false,bodyColor:userSparkyColor.body,accentColor:userSparkyColor.accent})
-                )
+            return h('div',{key:u.email||i,style:{
+              animation:`slideUp .3s ease-out ${i*.05}s both`,
+              display:'flex',alignItems:'center',gap:14,
+              padding:'14px 16px',
+              borderRadius:18,
+              background:isMe?'rgba(255,230,0,.12)':'rgba(255,255,255,.07)',
+              border:`1.5px solid ${isMe?'rgba(255,230,0,.4)':'rgba(255,255,255,.1)'}`,
+              marginBottom:8,
+              boxShadow:isMe?'0 0 20px rgba(255,230,0,.1)':'none',
+              minHeight:80
+            }},
+              h('div',{style:{
+                width:38,textAlign:'center',flexShrink:0,
+                fontSize:i<3?'1.6rem':'1rem',
+                fontFamily:"'Fredoka One',cursive",fontWeight:900,
+                color:i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'rgba(255,255,255,.4)',
+                lineHeight:1
+              }},rankEmoji),
+              h('div',{style:{width:56,height:72,flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}},
+                h(Sparky,{size:48,anim:false,bodyColor:userSparkyColor.body,accentColor:userSparkyColor.accent,botType})
               ),
               h('div',{style:{flex:1,minWidth:0}},
-                h('div',{style:{fontWeight:900,fontSize:'.9rem',color:isMe?'#FFE600':'#fff',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',lineHeight:1.25}},
-                  displayName+(isMe?' (you)':'')
-                ),
-                h('div',{style:{fontSize:'.68rem',fontWeight:700,color:'rgba(255,255,255,.38)',marginTop:2,lineHeight:1}},
-                  `${u.lessonsD||0} lessons · ${u.badgesD||0} badges · ${u.totalStars||0}⭐`
+                h('div',{style:{
+                  fontWeight:900,fontSize:'1.1rem',
+                  color:isMe?'#FFE600':'#fff',
+                  overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',
+                  lineHeight:1.3,marginBottom:4
+                }},displayName+(isMe?' (you)':'')),
+                h('div',{style:{
+                  fontSize:'.82rem',fontWeight:700,
+                  color:'rgba(255,255,255,.45)',
+                  lineHeight:1.4,
+                  display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'
+                }},
+                  h('span',null,`📚 ${u.lessonsD||0} lessons`),
+                  h('span',null,`🏅 ${u.badgesD||0} badges`),
+                  h('span',null,`⭐ ${u.totalStars||0} stars`)
                 )
               ),
-              h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1.25rem',fontWeight:900,color:isMe?'#FFE600':'rgba(255,255,255,.8)',flexShrink:0,minWidth:52,textAlign:'right'}},u.score||0)
+              h('div',{style:{
+                fontFamily:"'Fredoka One',cursive",
+                fontSize:'1.6rem',fontWeight:900,
+                color:isMe?'#FFE600':'rgba(255,255,255,.85)',
+                flexShrink:0,minWidth:60,textAlign:'right',
+                lineHeight:1
+              }},u.score||0)
             );
           }),
-          myRank>=20&&h('div',{style:{marginTop:8,padding:'8px 0',textAlign:'center',fontSize:'.8rem',fontWeight:800,color:'rgba(255,255,255,.35)'}},
+          myRank>=20&&h('div',{style:{marginTop:10,padding:'10px 0',textAlign:'center',fontSize:'.85rem',fontWeight:800,color:'rgba(255,255,255,.35)'}},
             `You are ranked #${myRank+1} — keep learning to climb! 🚀`
           )
         );
