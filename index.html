@@ -123,6 +123,7 @@ html,body{height:100%;background:#070118;color:white;font-family:'Nunito',sans-s
 </head>
 <body class="stars-bg">
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js"></script>
@@ -256,26 +257,90 @@ const SPARKY_BOTS=[
    head:{borderRadius:'45% 45% 35% 35%'},antenna:{shape:'diamond',color:'#80FFEE'},eyes:{borderRadius:'50%',size:.19},mouth:{shape:'smile'},deco:'ribbon'},
 ];
 
-function getUsers(){try{return JSON.parse(localStorage.getItem('ssa_users')||'[]');}catch{return [];}}
-function saveUsers(u){try{localStorage.setItem('ssa_users',JSON.stringify(u));}catch{}}
+// ╔══════════════════════════════════════════════════════════╗
+// ║  SUPABASE SETUP — paste your keys below then deploy      ║
+// ║  1. supabase.com → New project                           ║
+// ║  2. SQL Editor → run supabase_setup.sql                  ║
+// ║  3. Settings → API → copy URL and anon key here          ║
+// ╚══════════════════════════════════════════════════════════╝
+const SUPABASE_URL  = 'https://nrjqynvdhwflntrdxlbn.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_A6YI2PY0T9f6XfF6PWIvzg_TFfMrQ4W';
+const _db = (typeof supabase !== 'undefined' && SUPABASE_URL.indexOf('YOUR_PROJECT') === -1)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
+  : null;
+
+// ── LOCAL CACHE helpers (keeps UI instant; DB is source-of-truth) ──
 function getCurrentUser(){try{const e=localStorage.getItem('ssa_currentUser');return e?JSON.parse(e):null;}catch{return null;}}
 function saveCurrentUser(u){try{localStorage.setItem('ssa_currentUser',u?JSON.stringify(u):null);}catch{}}
-function getUserData(email){
-  try{const k='ssa_ud_'+btoa(email);const d=localStorage.getItem(k);return d?JSON.parse(d):{completed:[],stars:{},badges:[]};}catch{return {completed:[],stars:{},badges:[]};}
+function _cacheUD(email,data){try{localStorage.setItem('ssa_ud_'+btoa(email),JSON.stringify(data));}catch{}}
+function _readCache(email){try{const d=localStorage.getItem('ssa_ud_'+btoa(email));return d?JSON.parse(d):{completed:[],stars:{},badges:[]};}catch{return{completed:[],stars:{},badges:[]};}}
+function getUserData(email){return _readCache(email);}
+
+// ── SUPABASE DB HELPERS ─────────────────────────────────
+async function dbGetUser(email){
+  if(!_db)return null;
+  const {data}=await _db.from('ssa_users').select('*').eq('email',email.toLowerCase().trim()).maybeSingle();
+  return data;
 }
-function saveUserData(email,data){
-  try{const k='ssa_ud_'+btoa(email);localStorage.setItem(k,JSON.stringify(data));}catch{}
+async function dbCreateUser(u){
+  if(!_db)return;
+  await _db.from('ssa_users').upsert({
+    email:u.email.toLowerCase().trim(),password:u.password,username:u.username||u.email,
+    sparky_name:u.sparkyName||'Sparky',sparky_color_id:u.sparkyColorId||'blue',
+    sparky_bot_type:u.sparkyBotType||'sparky',voice_gender:u.voiceGender||'female',
+    joined_at:u.joinedAt||Date.now()
+  },{onConflict:'email'});
+  await _db.from('ssa_progress').upsert(
+    {email:u.email.toLowerCase().trim(),completed:[],badges:[],stars:{}},
+    {onConflict:'email'}
+  );
 }
-function getLeaderboard(){
-  const users=getUsers();
-  return users.map(u=>{
+async function dbSyncDown(email){
+  // After login: pull latest data from Supabase into local cache
+  if(!_db)return null;
+  const {data}=await _db.from('ssa_progress').select('*').eq('email',email.toLowerCase().trim()).maybeSingle();
+  if(data){
+    const prog={completed:data.completed||[],badges:data.badges||[],stars:data.stars||{}};
+    _cacheUD(email,prog);
+    return prog;
+  }
+  return null;
+}
+async function dbSaveProgress(email,data){
+  // Write to local cache first (instant), then sync to DB
+  _cacheUD(email,data);
+  if(!_db)return;
+  const totalStars=Object.values(data.stars||{}).reduce((a,v)=>a+v,0);
+  const lessonsD=(data.completed||[]).length;
+  const badgesD=(data.badges||[]).length;
+  const score=totalStars*10+lessonsD*5+badgesD*50;
+  const user=getCurrentUser();
+  const name=(user&&(user.username||user.email))||email;
+  await Promise.all([
+    _db.from('ssa_progress').upsert(
+      {email:email.toLowerCase().trim(),completed:data.completed||[],badges:data.badges||[],stars:data.stars||{},updated_at:new Date().toISOString()},
+      {onConflict:'email'}
+    ),
+    _db.from('ssa_leaderboard').upsert(
+      {email:email.toLowerCase().trim(),name,total_stars:totalStars,lessons_done:lessonsD,badges_count:badgesD,score,updated_at:new Date().toISOString()},
+      {onConflict:'email'}
+    )
+  ]);
+}
+async function getLeaderboardDB(){
+  if(!_db){
+    const u=getCurrentUser();if(!u)return[];
     const d=getUserData(u.email);
-    const totalStars=Object.values(d.stars||{}).reduce((a,v)=>a+v,0);
-    const lessonsD=(d.completed||[]).length;
-    const badgesD=(d.badges||[]).length;
-    return{...u,totalStars,lessonsD,badgesD,score:totalStars*10+lessonsD*5+badgesD*50};
-  }).sort((a,b)=>b.score-a.score);
+    const ts=Object.values(d.stars||{}).reduce((a,v)=>a+v,0);
+    const ld=(d.completed||[]).length,bd=(d.badges||[]).length;
+    return[{name:u.username||u.email,email:u.email,totalStars:ts,lessonsD:ld,badgesD:bd,score:ts*10+ld*5+bd*50}];
+  }
+  const {data}=await _db.from('ssa_leaderboard').select('*').order('score',{ascending:false}).limit(50);
+  return(data||[]).map(r=>({...r,name:r.name,totalStars:r.total_stars,lessonsD:r.lessons_done,badgesD:r.badges_count}));
 }
+// Sync-only legacy stub (for profile saves)
+function saveUserData(email,data){_cacheUD(email,data);}
+function getLeaderboard(){const u=getCurrentUser();if(!u)return[];const d=getUserData(u.email);const ts=Object.values(d.stars||{}).reduce((a,v)=>a+v,0);const ld=(d.completed||[]).length,bd=(d.badges||[]).length;return[{...u,name:u.username||u.email,totalStars:ts,lessonsD:ld,badgesD:bd,score:ts*10+ld*5+bd*50}];}
 
 
 const TIER2_MODULES=[
@@ -2034,6 +2099,8 @@ function App(){
   const [bonusTrackId,setBonusTrackId]=useState(null);
   const [mpState,setMpState]=useState(null); // multiplayer state
   const [lessonSearch,setLessonSearch]=useState('');
+  const [lbData,setLbData]=useState([]);
+  const [lbLoading,setLbLoading]=useState(false);
   const [bonusMod,setBonusMod]=useState(null);
   const [bonusLessonIdx,setBonusLessonIdx]=useState(0);
   const getBonusModData=()=>bonusMod?BONUS_TRACKS.find(bt=>bt.id===bonusTrackId)?.data?.find((_,i)=>i===(bonusMod-1)):null;
@@ -2058,16 +2125,33 @@ function App(){
   // Save per-user data whenever it changes
   useEffect(()=>{try{localStorage.setItem('ssa_pro',isPro);}catch{}},[isPro]);
   useEffect(()=>{
+    if(screen!=='leaderboard')return;
+    setLbLoading(true);
+    getLeaderboardDB().then(data=>{setLbData(data);setLbLoading(false);}).catch(()=>setLbLoading(false));
+  },[screen]);
+  useEffect(()=>{
     if(!authUser)return;
-    saveUserData(authUser.email,{completed:[...completed],badges:[...badges],stars});
+    // Save to cache instantly and sync to Supabase in background
+    dbSaveProgress(authUser.email,{completed:[...completed],badges:[...badges],stars});
   },[completed,badges,stars,authUser]);
 
   // Sync profile changes to users store
   const saveProfile=(fields)=>{
     if(!authUser)return;
-    const users=getUsers();
+    // Update localStorage cache
+    const users=JSON.parse(localStorage.getItem('ssa_users')||'[]');
     const idx=users.findIndex(u=>u.email===authUser.email);
-    if(idx>=0){Object.assign(users[idx],fields);saveUsers(users);saveCurrentUser(users[idx]);setAuthUser(users[idx]);}
+    if(idx>=0){Object.assign(users[idx],fields);localStorage.setItem('ssa_users',JSON.stringify(users));saveCurrentUser(users[idx]);setAuthUser(users[idx]);}
+    // Sync to Supabase
+    if(_db){
+      const dbFields={};
+      if(fields.sparkyName!==undefined)dbFields.sparky_name=fields.sparkyName;
+      if(fields.sparkyColorId!==undefined)dbFields.sparky_color_id=fields.sparkyColorId;
+      if(fields.sparkyBotType!==undefined)dbFields.sparky_bot_type=fields.sparkyBotType;
+      if(fields.voiceGender!==undefined)dbFields.voice_gender=fields.voiceGender;
+      if(fields.username!==undefined)dbFields.username=fields.username;
+      if(Object.keys(dbFields).length)_db.from('ssa_users').update(dbFields).eq('email',authUser.email).then(()=>{});
+    }
   };
   const toggleMute=()=>{const next=!muted;setMutedState(next);setMute(next);sounds.click();};
   // Sync voice gender to window global so speak() can access it without React state
@@ -2087,23 +2171,51 @@ function App(){
   },[phase,slideIdx,lesson?.id,screen]);
 
   // ── AUTH HANDLERS ──
-  const doLogin=()=>{
-    const users=getUsers();
-    const user=users.find(u=>u.email.toLowerCase()===authEmail.toLowerCase().trim()&&u.password===authPass);
-    if(!user){setAuthErr('Wrong email or password!');setAuthShake(true);setTimeout(()=>setAuthShake(false),500);return;}
+  const doLogin=async()=>{
+    setAuthErr('');setAuthShake(false);
+    let user=null;
+    if(_db){
+      // Try Supabase first
+      const dbUser=await dbGetUser(authEmail);
+      if(!dbUser||dbUser.password!==authPass){
+        setAuthErr('Wrong email or password!');setAuthShake(true);setTimeout(()=>setAuthShake(false),500);return;
+      }
+      user={email:dbUser.email,password:dbUser.password,username:dbUser.username,
+            sparkyName:dbUser.sparky_name||'Sparky',sparkyColorId:dbUser.sparky_color_id||'blue',
+            sparkyBotType:dbUser.sparky_bot_type||'sparky',voiceGender:dbUser.voice_gender||'female',
+            joinedAt:dbUser.joined_at};
+    } else {
+      // Fallback to localStorage
+      const users=JSON.parse(localStorage.getItem('ssa_users')||'[]');
+      user=users.find(u=>u.email.toLowerCase()===authEmail.toLowerCase().trim()&&u.password===authPass);
+      if(!user){setAuthErr('Wrong email or password!');setAuthShake(true);setTimeout(()=>setAuthShake(false),500);return;}
+    }
     saveCurrentUser(user);setAuthUser(user);
     setSparkyName(user.sparkyName||'Sparky');setSparkyColorId(user.sparkyColorId||'blue');setSparkyBotType(user.sparkyBotType||'sparky');setVoiceGender(user.voiceGender||'female');
-    const d=getUserData(user.email);
+    // Pull latest progress from Supabase (overrides stale cache)
+    const freshProg=await dbSyncDown(user.email);
+    const d=freshProg||getUserData(user.email);
     setCompleted(new Set(d.completed||[]));setBadges(new Set(d.badges||[]));setStars(d.stars||{});
     setAuthErr('');setScreen('welcome');sounds.welcome();
   };
-  const doSignup=()=>{
+  const doSignup=async()=>{
     if(!authEmail.trim()||!authPass.trim()||!authUser2.trim()){setAuthErr('Please fill in all fields!');setAuthShake(true);setTimeout(()=>setAuthShake(false),500);return;}
     if(authPass.length<4){setAuthErr('Password needs at least 4 characters!');return;}
-    const users=getUsers();
-    if(users.find(u=>u.email.toLowerCase()===authEmail.toLowerCase().trim())){setAuthErr('That email is already registered!');return;}
-    const newUser={email:authEmail.toLowerCase().trim(),password:authPass,username:authUser2.trim(),sparkyName:'Sparky',sparkyColorId:'blue',sparkyBotType:'sparky',voiceGender:'female',joinedAt:Date.now()};
-    users.push(newUser);saveUsers(users);saveCurrentUser(newUser);setAuthUser(newUser);
+    const email=authEmail.toLowerCase().trim();
+    // Check existing — try DB first, fallback to localStorage
+    if(_db){
+      const existing=await dbGetUser(email);
+      if(existing){setAuthErr('That email is already registered!');return;}
+    } else {
+      const users=JSON.parse(localStorage.getItem('ssa_users')||'[]');
+      if(users.find(u=>u.email.toLowerCase()===email)){setAuthErr('That email is already registered!');return;}
+    }
+    const newUser={email,password:authPass,username:authUser2.trim(),sparkyName:'Sparky',sparkyColorId:'blue',sparkyBotType:'sparky',voiceGender:'female',joinedAt:Date.now()};
+    // Save to DB and localStorage
+    await dbCreateUser(newUser);
+    const lsUsers=JSON.parse(localStorage.getItem('ssa_users')||'[]');
+    lsUsers.push(newUser);localStorage.setItem('ssa_users',JSON.stringify(lsUsers));
+    saveCurrentUser(newUser);setAuthUser(newUser);
     setSparkyName('Sparky');setSparkyColorId('blue');
     setCompleted(new Set());setBadges(new Set());setStars({});
     setAuthErr('');setScreen('welcome');sounds.welcome();
@@ -2150,7 +2262,9 @@ function App(){
           h('span',{className:'rainbow'},'STEM SPARK'),h('br'),
           h('span',{style:{color:'#FFE600',textShadow:'0 0 30px rgba(255,230,0,.5)'}},'ACADEMY')
         ),
-        h('p',{style:{color:'rgba(255,255,255,.55)',fontWeight:800,fontSize:'.88rem',marginTop:4}},'🤖 AI • 💬 Prompting • 🧩 Logic • 👾 Coding • 🌐 Web')
+        h('p',{style:{color:'rgba(255,255,255,.55)',fontWeight:800,fontSize:'.88rem',marginTop:4}},'🤖 AI • 💬 Prompting • 🧩 Logic • 👾 Coding • 🌐 Web'),
+        h('div',{style:{fontSize:'.72rem',fontWeight:700,marginTop:2,color:_db?'#39FF14':'rgba(255,255,255,.3)'}},
+          _db?'🟢 Cloud sync active':'💾 Local storage only')
       ),
       h('div',{style:{display:'flex',gap:0,width:'100%',background:'rgba(255,255,255,.06)',borderRadius:18,padding:4,border:'1.5px solid rgba(255,255,255,.1)'}},
         h('button',{className:`kb`,style:{flex:1,fontSize:'.95rem',padding:'11px',background:authTab==='login'?'linear-gradient(135deg,#FF006E,#8B00FF)':'transparent',color:'white',borderRadius:14,boxShadow:authTab==='login'?'0 4px 16px rgba(255,0,110,.4)':'none'},onClick:()=>{setAuthTab('login');setAuthErr('');}},authTab==='login'?'🔓 Sign In':'Sign In'),
@@ -3128,11 +3242,15 @@ if(screen==='parent'){
         h('div',{style:{fontSize:'.78rem',fontWeight:800,color:'rgba(255,255,255,.35)'}},'Score = Stars × 10 + Lessons × 5 + Badges × 50')
       ),
       (()=>{
-        const lb=getLeaderboard();
+        const lb=lbData;
         const myEmail=authUser?.email;
         const myRank=lb.findIndex(u=>u.email===myEmail);
         return h('div',null,
-          lb.length===0&&h('div',{style:{textAlign:'center',padding:30}},
+          lbLoading&&h('div',{style:{textAlign:'center',padding:30,color:'rgba(255,255,255,.5)'}},
+            h('div',{style:{fontSize:'2rem',animation:'spin 1s linear infinite'}},'⏳'),
+            h('p',{style:{marginTop:8,fontWeight:700}},'Loading leaderboard...')
+          ),
+          !lbLoading&&lb.length===0&&h('div',{style:{textAlign:'center',padding:30}},
             h(Sparky,{size:70,mood:'happy'}),
             h('p',{style:{fontWeight:800,color:'rgba(255,255,255,.4)',marginTop:12}},'No scores yet! Complete lessons to appear here!')
           ),
