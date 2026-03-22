@@ -336,7 +336,10 @@ async function getLeaderboardDB(){
     const d=getUserData(u.email);
     const ts=Object.values(d.stars||{}).reduce((a,v)=>a+v,0);
     const ld=(d.completed||[]).length,bd=(d.badges||[]).length;
-    return[{name:u.username||u.email,email:u.email,totalStars:ts,lessonsD:ld,badgesD:bd,score:ts*10+ld*5+bd*50}];
+    return[{name:u.username||u.email,email:u.email,totalStars:ts,lessonsD:ld,badgesD:bd,
+            score:ts*10+ld*5+bd*50,
+            sparkyBotType:u.sparkyBotType||'sparky',
+            sparkyColorId:u.sparkyColorId||'blue'}];
   }
   const {data}=await _db.from('ssa_leaderboard').select('*').order('score',{ascending:false}).limit(50);
   return(data||[]).map(r=>({...r,name:r.name,totalStars:r.total_stars,lessonsD:r.lessons_done,badgesD:r.badges_count,sparkyBotType:r.sparky_bot_type||'sparky',sparkyColorId:r.sparky_color_id||'blue'}));
@@ -2154,6 +2157,12 @@ function App(){
       if(fields.voiceGender!==undefined)dbFields.voice_gender=fields.voiceGender;
       if(fields.username!==undefined)dbFields.username=fields.username;
       if(Object.keys(dbFields).length)_db.from('ssa_users').update(dbFields).eq('email',authUser.email).then(()=>{});
+      // Also sync bot appearance to leaderboard immediately so the right robot shows
+      const lbFields={};
+      if(fields.sparkyBotType!==undefined)lbFields.sparky_bot_type=fields.sparkyBotType;
+      if(fields.sparkyColorId!==undefined)lbFields.sparky_color_id=fields.sparkyColorId;
+      if(fields.username!==undefined)lbFields.name=fields.username;
+      if(Object.keys(lbFields).length)_db.from('ssa_leaderboard').update(lbFields).eq('email',authUser.email).then(()=>{});
     }
   };
   const toggleMute=()=>{const next=!muted;setMutedState(next);setMute(next);sounds.click();};
