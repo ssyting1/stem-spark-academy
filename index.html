@@ -2366,7 +2366,7 @@ function App(){
         ))
       ),
       h('p',{style:{fontWeight:800,fontSize:'.72rem',color:'rgba(255,255,255,.25)',marginTop:12}},
-        'Grade 3–12 • 32+ Lessons • 8 Badges to Collect'
+        `Grade 3–12 • 32+ Lessons • ${ALL_MODULES.length} Badges to Collect`
       )
     )
   );
@@ -3334,8 +3334,8 @@ if(screen==='parent'){
     h(StarsBg),
     h(TopBar,{title:'Your Badges 🏅',back:'welcome',backLabel:'← Home'}),
     h('div',{style:{flex:1,overflowY:'auto',padding:'12px 14px 20px',display:'flex',flexDirection:'column',gap:12,zIndex:1}},
-      h('div',{style:{textAlign:'center',padding:'10px 0 16px'}},h(Sparky,{mood:badges.size>0?'celebrating':'happy',size:80,bodyColor:sparkyColor.body,accentColor:sparkyColor.accent,botType:sparkyBotType}),h('p',{style:{fontWeight:800,fontSize:'.85rem',color:'rgba(255,255,255,.5)',marginTop:8}},badges.size===MODULES.length?'🎓 You earned ALL Tier 1 badges! Time to go Pro!':badges.size>0?`Amazing! ${badges.size}/${MODULES.length} badges earned!`:'Complete all 4 lessons in each world to earn a badge!')),
-      MODULES.map(m=>{const done=m.lessons.filter(l=>completed.has(l.id)).length;return h('div',{key:m.id,className:`badge-card${badges.has(m.id)?' earned':''}`,style:{marginBottom:0}},h('div',{style:{display:'flex',alignItems:'center',gap:14}},h('div',{style:{fontSize:'3.2rem',opacity:badges.has(m.id)?1:.22,filter:badges.has(m.id)?'none':'grayscale(100%)'}},m.emoji),h('div',{style:{flex:1}},h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1rem',color:badges.has(m.id)?'#FFE600':'rgba(255,255,255,.4)',marginBottom:2}},m.badgeName),h('div',{style:{fontSize:'.78rem',color:'rgba(255,255,255,.45)',fontWeight:800,marginBottom:6}},m.title),h('div',{style:{height:5,borderRadius:3,background:'rgba(255,255,255,.12)',overflow:'hidden',marginBottom:4}},h('div',{style:{height:'100%',borderRadius:3,background:m.grad,width:`${(done/m.lessons.length)*100}%`,transition:'width .5s'}})),h('div',{style:{fontSize:'.72rem',fontWeight:800,color:badges.has(m.id)?'#39FF14':'rgba(255,255,255,.4)'}},badges.has(m.id)?'✅ Earned!':`${done}/4 lessons done`)),badges.has(m.id)&&h('div',{style:{fontSize:'2.5rem'},className:'bounce'},'🏅')));})
+      h('div',{style:{textAlign:'center',padding:'10px 0 16px'}},h(Sparky,{mood:badges.size>0?'celebrating':'happy',size:80,bodyColor:sparkyColor.body,accentColor:sparkyColor.accent,botType:sparkyBotType}),h('p',{style:{fontWeight:800,fontSize:'.85rem',color:'rgba(255,255,255,.5)',marginTop:8}},badges.size===ALL_MODULES.length?'🎓 You earned ALL badges! You are a STEM master!':badges.size>0?`Amazing! ${badges.size}/${ALL_MODULES.length} badges earned!`:'Complete all 4 lessons in each world to earn a badge!')),
+      ALL_MODULES.map(m=>{const done=m.lessons.filter(l=>completed.has(l.id)).length;return h('div',{key:m.id,className:`badge-card${badges.has(m.id)?' earned':''}`,style:{marginBottom:0}},h('div',{style:{display:'flex',alignItems:'center',gap:14}},h('div',{style:{fontSize:'3.2rem',opacity:badges.has(m.id)?1:.22,filter:badges.has(m.id)?'none':'grayscale(100%)'}},m.emoji),h('div',{style:{flex:1}},h('div',{style:{fontFamily:"'Fredoka One',cursive",fontSize:'1rem',color:badges.has(m.id)?'#FFE600':'rgba(255,255,255,.4)',marginBottom:2}},m.badgeName),h('div',{style:{fontSize:'.78rem',color:'rgba(255,255,255,.45)',fontWeight:800,marginBottom:6}},m.title),h('div',{style:{height:5,borderRadius:3,background:'rgba(255,255,255,.12)',overflow:'hidden',marginBottom:4}},h('div',{style:{height:'100%',borderRadius:3,background:m.grad,width:`${(done/m.lessons.length)*100}%`,transition:'width .5s'}})),h('div',{style:{fontSize:'.72rem',fontWeight:800,color:badges.has(m.id)?'#39FF14':'rgba(255,255,255,.4)'}},badges.has(m.id)?'✅ Earned!':`${done}/4 lessons done`)),badges.has(m.id)&&h('div',{style:{fontSize:'2.5rem'},className:'bounce'},'🏅')));})
     )
   );
 
